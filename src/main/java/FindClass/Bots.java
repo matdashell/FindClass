@@ -21,8 +21,8 @@ public class Bots {
 
     public static List<FacebookClass> facebook = new ArrayList<>();
     public static String[] listaPesquisa;
-    public static String[] senhas = {"ogb874629ij","ogb874629ij","ogb874629ij","ogb874629ij"};
-    public static String[] emails = {"testeselenium001@outlook.com","testeselenium002@outlook.com","testeselenium003@outlook.com","testeselenium004@outlook.com"};
+    public static String[] senhas = ;
+    public static String[] emails = ;
 
     public static void main(String[] args) {
 
