@@ -1,7 +1,6 @@
 package fbSelenium.code;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +50,7 @@ public class SQL {
             url.add(qry.getString("url"));
         }
 
-        return url.contains(postAtual);
+        return !url.contains(postAtual);
     }
 
     //método filter usado para o user poder filtrar os dados
@@ -61,6 +60,7 @@ public class SQL {
         boolean aux = false;
 
         if(cmdFalse != null && !cmdFalse.trim().equals("")){
+
             String[] temp = cmdFalse.split(",");
 
             for(int i = 0; i < temp.length; i++){
@@ -88,7 +88,7 @@ public class SQL {
             }
         }
 
-        PreparedStatement filter = null;
+        PreparedStatement filter;
         ResultSet rs = null;
 
         if(primeiraExecucao) {

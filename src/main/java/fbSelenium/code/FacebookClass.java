@@ -170,13 +170,15 @@ public class FacebookClass {
             verificarSizePost(i);
 
             try{
-                if(verificarSePossuiComentarios(posts.get(i))){
-                    verificarSePossuiVerMaisComentarios(posts.get(i));
-                    expandirRespostas(posts.get(i));
-                    capturarComentarios(posts.get(i));
-                }else{
-                    limite++;
-                    descer(1);
+                if(gravarPost(find.one(posts.get(i), atributoUnico_inPost_o).getAttribute("href"))) {
+                    if (verificarSePossuiComentarios(posts.get(i))) {
+                        verificarSePossuiVerMaisComentarios(posts.get(i));
+                        expandirRespostas(posts.get(i));
+                        capturarComentarios(posts.get(i));
+                    } else {
+                        limite++;
+                        descer(1);
+                    }
                 }
             }catch (Exception e) {
                 fixPage();
@@ -307,7 +309,6 @@ public class FacebookClass {
     Metodo com função de output dos dados obtidos.
      */
     private void capturarComentarios(WebElement post){
-        StringBuilder temp = new StringBuilder();
         Set<WebElement> blocosComentarios = new HashSet<>(find.more(post, blocosDeComentarios_inPost_m));
         int cont = 0;
         contTotal += blocosComentarios.size();
@@ -316,15 +317,11 @@ public class FacebookClass {
 
         for(WebElement bloco : blocosComentarios){
             cont++;
-            temp.append("\n-------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
             if(find.visible(bloco, comentarios_inBlocosComents_m, 1)){
-                temp.append("\nUser: ").append(find.one(bloco, nomes_inBlocosComents_m).getText()).append("\nComentou: ").append(find.one(bloco, comentarios_inBlocosComents_m).getText()).append("\nURL: ").append((find.one(bloco, nomes_inBlocosComents_m).getAttribute("href")).split("[0]")[0]);
-            }else{
-                temp.append("\nUser: ").append(find.one(bloco, nomes_inBlocosComents_m).getText()).append("\nPostou uma imagem").append("\nURL: ").append(((find.one(bloco, nomes_inBlocosComents_m).getAttribute("href")).split("[0]"))[0]);
+                gravarUser(find.one(bloco, nomes_inBlocosComents_m).getText(), find.one(bloco, comentarios_inBlocosComents_m).getText(), find.one(bloco, nomes_inBlocosComents_m).getAttribute("href").split("[0]")[0]);
             }
         }
-        temp = null;
         cont = 0;
     }
 
@@ -347,11 +344,25 @@ public class FacebookClass {
 
         }
     }
-    synchronized private static void gravarPost(String urlPost){
-
+    synchronized private static boolean gravarPost(String urlPost){
+        if(carregarPost(urlPost)){
+            try {
+                sql.gravarPost(urlPost);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return true;
+        }
+        return false;
     }
     synchronized private static boolean carregarPost(String urlPost){
-        return false;
+        boolean retorno = false;
+        try {
+            retorno = sql.verificarPost(urlPost);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return retorno;
     }
 
     synchronized static private void atualizarTotal(int num){
