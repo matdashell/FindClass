@@ -1,7 +1,5 @@
 package fbSelenium.frame;
 
-import FindClass.Bots;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -11,79 +9,193 @@ import static java.lang.Thread.sleep;
 
 public class TelaInicial {
 
-    public static volatile boolean iniciado = false;
+     static TelaSQL telaSQL;
+     static TelaInfoThread telaInfoThread;
+     static JFrame frameTelaInicial = new JFrame();
+     static JPanel contenPanel = new JPanel(null);
 
-    private static final JFrame frame = new JFrame();
+     private static final JLabel botaoIniciarTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\IniciarTrue.png"));
+     private static final JLabel botaoIniciarFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\IniciarFalse.png"));
+     private static final JLabel botaoInfoTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\InfoTrue.png"));
+     private static final JLabel botaoInfoFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\InfoFalse.png"));
+     private static final JLabel botaoConfigTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\ConfigTrue.png"));
+     private static final JLabel botaoConfigFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\ConfigFalse.png"));
+     private static final JLabel botaoSQLTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\SQLTrue.png"));
+     private static final JLabel botaoSQLFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\SQLFalse.png"));
+     private static final JLabel postCertta = new JLabel(new ImageIcon("C:\\RecursosPng\\logoCertta.png"));
+     private static final JLabel telaInicial = new JLabel(new ImageIcon("C:\\RecursosPng\\TelaInicial.png"));
 
-    public static JDialog infoTread;
-    public static JDialog configThread;
+     private static final JLabel listenerIniciar = new JLabel();
+     private static final JLabel listenerInfo = new JLabel();
+     private static final JLabel listenerConfig = new JLabel();
+     private static final JLabel listenerSQL = new JLabel();
 
-    static final Font labelBotao = new Font("Arial", Font.ITALIC , 20);
+     static volatile boolean iniciar = false;
 
-    private static final TelaInfoThread panelInfoTread = new TelaInfoThread();
-    private static final TelaConfig panelConfigThread = new TelaConfig();
+     public TelaInicial(){
+        configDemaisTelas();
+        setBoundsComponentes();
+        visibilidade();
+        addToPanel();
+        configTela();
+        actionComponentes();
+        confirm();
+        while(!iniciar){}
+        animacao();
 
-    public TelaInicial(){
+     }
 
-        configurarTela();
-        setFrames();
-    }
+     private static void configDemaisTelas(){
+        telaSQL = new TelaSQL();
+        telaInfoThread = new TelaInfoThread();
+        telaSQL.getFrame().setVisible(false);
+     }
 
-    private static void setFrames(){
-        panelConfigThread.inciar();
-        configThread = newPopUp(panelConfigThread.getPanel(), "Configurações", true);
+     private static void configTela(){
+         contenPanel.setPreferredSize(new Dimension(1024,768));
+         frameTelaInicial.setPreferredSize(contenPanel.getPreferredSize());
+         frameTelaInicial.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+         frameTelaInicial.setVisible(true);
+         frameTelaInicial.setResizable(false);
+         frameTelaInicial.add(contenPanel);
+     }
 
-        setBots();
-        panelInfoTread.iniciar();
-        infoTread = newPopUp(panelInfoTread.getPanel(), "Informações Thread", false);
-    }
+     private static void setBoundsComponentes(){
+         botaoIniciarTrue.setBounds(2,3,521,198);
+         botaoIniciarFalse.setBounds(2,3,521,198);
+         botaoInfoTrue.setBounds(523,3,260,201);
+         botaoInfoFalse.setBounds(523,3,260,201);
+         botaoConfigTrue.setBounds(783,3,226,200);
+         botaoConfigFalse.setBounds(783,3,226,200);
+         botaoSQLTrue.setBounds(11,490,272,266);
+         botaoSQLFalse.setBounds(11,490,272,266);
+         postCertta.setBounds(20,198,980,300);
+         telaInicial.setBounds(0,0,1024,768);
 
-    private static void setBots(){
-        while(!iniciado){}
-        Bots.numeroDeExecucoes = Integer.parseInt(TelaConfig.execMinimas.getText().trim());
-        Bots.numeroDeThreads = Integer.parseInt(TelaConfig.quantidade.getText().trim());
-        Bots.listaPesquisa = TelaConfig.pesquisas.getText().split(",");
-    }
+         listenerIniciar.setBounds(2,3,521,198);
+         listenerInfo.setBounds(523,3,260,201);
+         listenerConfig.setBounds(783,3,226,200);
+         listenerSQL.setBounds(11,490,272,266);
+     }
 
-    public static void configurarTela(){
+     private static void addToPanel(){
+         contenPanel.add(listenerIniciar);
+         contenPanel.add(listenerInfo);
+         contenPanel.add(listenerConfig);
+         contenPanel.add(listenerSQL);
+         contenPanel.add(botaoIniciarFalse);
+         contenPanel.add(botaoInfoFalse);
+         contenPanel.add(botaoConfigFalse);
+         contenPanel.add(botaoSQLFalse);
+         contenPanel.add(botaoIniciarTrue);
+         contenPanel.add(botaoInfoTrue);
+         contenPanel.add(botaoConfigTrue);
+         contenPanel.add(botaoSQLTrue);
+         contenPanel.add(postCertta);
+         contenPanel.add(telaInfoThread.getPanel());
+         contenPanel.add(telaInicial);
+     }
 
-        frame.setLayout(null);
-        frame.setSize(800,500);
-        frame.setTitle("BotProgram");
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+     private static void visibilidade(){
+         botaoIniciarFalse.setVisible(false);
+         botaoInfoFalse.setVisible(false);
+         botaoConfigFalse.setVisible(false);
+         botaoSQLFalse.setVisible(false);
+         botaoIniciarTrue.setVisible(false);
+         botaoInfoTrue.setVisible(false);
+         botaoConfigTrue.setVisible(false);
+         botaoSQLTrue.setVisible(false);
+     }
 
-        JLabel botaoConfigTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\simpleButtonTrue.png"));
-        JLabel botaoConfigFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\simpleButtonFalse.png"));
-        JLabel configuracoes = new JLabel("Config.");
-        JLabel iniciar = new JLabel("iniciar");
-        JLabel SQL = new JLabel("SQL");
+     private static void confirm(){
+         frameTelaInicial.repaint();
+         frameTelaInicial.validate();
+         frameTelaInicial.pack();
+     }
 
-        configuracoes.setFont(labelBotao);
-        iniciar.setFont(labelBotao);
-        SQL.setFont(labelBotao);
+     private static void animacao(){
+         while(postCertta.getLocation().getX() < 1024) {
+             try{sleep(3);}catch (Exception ignored) { }
+             postCertta.setLocation((int)(postCertta.getLocation().getX()+1), (int)(postCertta.getLocation().getY()));
+         }
+         postCertta.setLocation(1024,475);
 
-        configuracoes.setBounds(75,253,200,30);
-        iniciar.setBounds(325,253,200,30);
-        SQL.setBounds(575,253,200,30);
+         while(postCertta.getLocation().getX() > 283){
+             try{sleep(3);}catch (Exception ignored) { }
+             postCertta.setLocation((int)(postCertta.getLocation().getX()-1), (int)(postCertta.getLocation().getY()));
+         }
+     }
 
-        frame.add(configuracoes);
-        frame.add(iniciar);
-        frame.add(SQL);
-
-        botaoConfigFalse.setBounds(50,240,200,60);
-        botaoConfigTrue.setBounds(50,240,200,60);
-        botaoConfigTrue.setVisible(false);
-        frame.add(botaoConfigTrue);
-        frame.add(botaoConfigFalse);
-
-        botaoConfigFalse.addMouseListener(new MouseListener() {
+    private static void actionComponentes(){
+        listenerIniciar.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(!iniciado) {
-                    configThread.setVisible(!configThread.isVisible());
+                iniciar = true;
+                botaoIniciarTrue.setVisible(false);
+                telaSQL.getFrame().setVisible(false);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if(!iniciar) {
+                    botaoIniciarTrue.setVisible(true);
+                }else{
+                    botaoIniciarFalse.setVisible(true);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(!iniciar) {
+                    botaoIniciarTrue.setVisible(false);
+                }else{
+                    botaoIniciarFalse.setVisible(false);
+                }
+            }
+        });
+
+        listenerInfo.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                botaoInfoTrue.setVisible(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                botaoInfoTrue.setVisible(false);
+            }
+        });
+
+        listenerConfig.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(botaoConfigTrue.isVisible()){
+
                 }
             }
 
@@ -99,38 +211,29 @@ public class TelaInicial {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if(!iniciado) {
+                if(!iniciar) {
                     botaoConfigTrue.setVisible(true);
+                }else{
+                    botaoConfigFalse.setVisible(true);
                 }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                botaoConfigTrue.setVisible(false);
+                if(!iniciar) {
+                    botaoConfigTrue.setVisible(false);
+                }else{
+                    botaoConfigFalse.setVisible(false);
+                }
             }
         });
 
-        JLabel botaoStartTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\simpleButtonTrue.png"));
-        JLabel botaoStartFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\simpleButtonFalse.png"));
-
-        botaoStartFalse.setBounds(300,240,200,60);
-        botaoStartTrue.setBounds(300,240,200,60);
-        botaoStartTrue.setVisible(false);
-        frame.add(botaoStartTrue);
-        frame.add(botaoStartFalse);
-
-        botaoStartFalse.addMouseListener(new MouseListener() {
+        listenerSQL.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(panelConfigThread.permissao()) {
-                    if(!iniciado) {
-                        iniciado = true;
-                        iniciar.setText("Informações");
-                        try{sleep(1000);}catch (Exception ignore){}
-                    }else {
-                        infoTread.setVisible(!infoTread.isVisible());
-                        infoTread.setLocationRelativeTo(null);
-                    }
+                if(botaoSQLTrue.isVisible()){
+                    telaSQL.getFrame().setVisible(true);
+                    telaSQL.getFrame().setLocationRelativeTo(null);
                 }
             }
 
@@ -146,69 +249,25 @@ public class TelaInicial {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                botaoStartTrue.setVisible(true);
+                if(!iniciar) {
+                    botaoSQLTrue.setVisible(true);
+                }else {
+                    botaoSQLFalse.setVisible(true);
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                botaoStartTrue.setVisible(false);
+                if(!iniciar) {
+                    botaoSQLTrue.setVisible(false);
+                }else{
+                    botaoSQLFalse.setVisible(false);
+                }
             }
         });
-
-        JLabel botaoSQLTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\simpleButtonTrue.png"));
-        JLabel botaoSQLFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\simpleButtonFalse.png"));
-
-        botaoSQLFalse.setBounds(550,240,200,60);
-        botaoSQLTrue.setBounds(550,240,200,60);
-        botaoSQLTrue.setVisible(false);
-        frame.add(botaoSQLTrue);
-        frame.add(botaoSQLFalse);
-
-        botaoSQLFalse.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                botaoSQLTrue.setVisible(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                botaoSQLTrue.setVisible(false);
-            }
-        });
-
-        JLabel planoFundo = new JLabel(new ImageIcon("C:\\RecursosPng\\planoInicial.jpg"));
-        planoFundo.setBounds(0,0,815,600);
-        frame.add(planoFundo);
-        frame.validate();
-        frame.repaint();
     }
 
-    static JDialog newPopUp(JPanel jp ,String nomeTela, boolean visivel){
-        JDialog popUp = new JDialog();
-        popUp.setTitle(nomeTela);
-        popUp.setLayout(null);
-        popUp.setResizable(false);
-        popUp.setPreferredSize(new Dimension(jp.getWidth()+15, jp.getHeight()+25));
-        popUp.add(jp);
-        popUp.pack();
-        popUp.setVisible(visivel);
-        popUp.setLocationRelativeTo(null);
-
-        return popUp;
+    public static void main(String[] args) {
+        new TelaInicial();
     }
 }

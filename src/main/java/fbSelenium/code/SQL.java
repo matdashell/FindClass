@@ -11,7 +11,7 @@ public class SQL {
     static Connection conexao;
 
     //iniciar sql
-    SQL() throws SQLException {
+    public SQL() throws SQLException {
         String url = "jdbc:mysql://localhost/infofind";
         conexao = DriverManager.getConnection(url,"root", "");
     }

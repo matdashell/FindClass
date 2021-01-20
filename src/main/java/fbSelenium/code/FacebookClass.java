@@ -1,7 +1,6 @@
 package fbSelenium.code;
 
 import FindClass.Find;
-import fbSelenium.frame.TelaInfoThread;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
@@ -330,11 +329,11 @@ public class FacebookClass {
     }
 
     private void editarLogCaixaGrafica(String textoInfo){
-        TelaInfoThread.texThread.get(getNumber()).setText(textoInfo);
+        //TelaInfoThread.texThread.get(getNumber()).setText(textoInfo);
     }
 
     private void atualizarLabelComents(int num){
-        TelaInfoThread.comentarios.get(getNumber()).setText("| C.: "+num);
+        //TelaInfoThread.comentarios.get(getNumber()).setText("| C.: "+num);
     }
 
     synchronized private static void gravarUser(String user, String texto, String urlUser){

@@ -8,80 +8,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TelaInfoThread {
-    private static final JPanel infoThread = new JPanel();
-    private static final JPanel contentPanelInfoThread = new JPanel();
-    private static final List<JPanel> separators = new ArrayList<>();
-    public static List<JLabel> comentarios = new ArrayList<>();
+
+    private static final JPanel contentPanelInforThread = new JPanel();
+    private static final List<JPanel> blocosInfo = new ArrayList<>();
     public static List<JLabel> numeroThread = new ArrayList<>();
-    public static List<JLabel> pesquisaThread = new ArrayList<>();
-    public static List<JTextPane> texThread = new ArrayList<>();
-    private static final List<ScrollPane> scrollTextThread = new ArrayList<ScrollPane>();
-    private static final List<JButton> buttonList = new ArrayList<>();
-    private static JScrollPane scrollInfoThread;
+    public static List<JLabel> pesquisa = new ArrayList<>();
+    public static List<JLabel> quantidade = new ArrayList<>();
+    public static List<JLabel> restantes = new ArrayList<>();
+    public static List<JLabel> log = new ArrayList<>();
+    public static List<JLabel> planoFundo = new ArrayList<>();
 
-    private static final Font fonteLabelBold = new Font("FreeMono", Font.ITALIC | Font.BOLD, 14);
-    private static final Font fonteLabel = new Font("FreeMono", Font.ITALIC, 14);
+    private static Font font = new Font("Cinzel", Font.ITALIC ,14);
 
-    TelaInfoThread(){
-
-
+    TelaInfoThread() {
+        configurarComponentes();
     }
 
-    static void iniciar(){
-        //set dos blocos de informam sobre as threads
+    public static JPanel getPanel(){
+        return contentPanelInforThread;
+    }
+
+    private static void configurarComponentes(){
+
         for(int i = 0; i < Bots.numeroDeThreads; i++){
-            separators.add(new JPanel(null));
-            numeroThread.add(new JLabel("num.: "+i));
-            comentarios.add(new JLabel("| C.: 0"));
-            pesquisaThread.add(new JLabel("pesq.: "+Bots.listaPesquisa[i]));
-            texThread.add(new JTextPane());
-            scrollTextThread.add(new ScrollPane());
 
-            numeroThread.get(i).setFont(fonteLabelBold);
-            pesquisaThread.get(i).setFont(fonteLabel);
-            comentarios.get(i).setFont(fonteLabel);
+            blocosInfo.add(new JPanel(null));
+            numeroThread.add(new JLabel("Numero:"));
+            pesquisa.add(new JLabel("Pesq.:"));
+            quantidade.add(new JLabel("Total:"));
+            restantes.add(new JLabel("Restante:"));
+            log.add(new JLabel("Log:"));
+            planoFundo.add(new JLabel(new ImageIcon("C:\\RecursosPng\\planoFundoInfoThread.png")));
 
-            separators.get(i).setPreferredSize(new Dimension(600,25));
-            comentarios.get(i).setBounds(75,0,75,25);
-            numeroThread.get(i).setBounds(0,0,75,25);
-            pesquisaThread.get(i).setBounds(0,25,150,25);
-            scrollTextThread.get(i).setBounds(150,0,425,50);
+            blocosInfo.get(i).setBounds(0,50*i,900,50);
+            numeroThread.get(i).setBounds(10,11,100,25);
+            pesquisa.get(i).setBounds(145,11,100,25);
+            quantidade.get(i).setBounds(280,11,100,25);
+            restantes.get(i).setBounds(420,11,100,25);
+            log.get(i).setBounds(555,11,400,25);
+            planoFundo.get(i).setBounds(0,0,900,50);
 
-            scrollTextThread.get(i).add(texThread.get(i));
-            separators.get(i).add(comentarios.get(i));
-            separators.get(i).add(numeroThread.get(i));
-            separators.get(i).add(pesquisaThread.get(i));
-            separators.get(i).add(scrollTextThread.get(i));
+            numeroThread.get(i).setFont(font);
+            pesquisa.get(i).setFont(font);
+            quantidade.get(i).setFont(font);
+            restantes.get(i).setFont(font);
+            log.get(i).setFont(font);
+
+            blocosInfo.get(i).add(numeroThread.get(i));
+            blocosInfo.get(i).add(pesquisa.get(i));
+            blocosInfo.get(i).add(quantidade.get(i));
+            blocosInfo.get(i).add(restantes.get(i));
+            blocosInfo.get(i).add(log.get(i));
+            blocosInfo.get(i).add(planoFundo.get(i));
+
+            contentPanelInforThread.add(blocosInfo.get(i));
         }
-
-        //setando infoThread
-        infoThread.setLayout(null);
-        infoThread.setPreferredSize(new Dimension(575, 50 * separators.size()));
-
-        //adicionando os blocos separators dentro da Panel infoThread
-        for(int i = 0; i < separators.size(); i++){
-            separators.get(i).setBounds(0,50*i,600,50);
-            infoThread.add(separators.get(i));
-        }
-
-        //setando informações do scrollInfoThread
-        scrollInfoThread = new JScrollPane(infoThread);
-        scrollInfoThread.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollInfoThread.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollInfoThread.getVerticalScrollBar().setUnitIncrement(5);
-        scrollInfoThread.setBounds(1,0,600,300);
-
-        //adicionando Scroll ao contentPanel
-        contentPanelInfoThread.setBounds(0,0,600,300);
-        contentPanelInfoThread.setLayout(null);
-        contentPanelInfoThread.add(scrollInfoThread);
+        contentPanelInforThread.setLayout(null);
+        contentPanelInforThread.setBounds(60,245,900,200);
     }
 
-    static JPanel getPanel(){
-        return contentPanelInfoThread;
-    }
-
-    static void setPesquisa(String pesquisa, int thread){
-        texThread.get(thread).setText(pesquisa);
+    public static void main(String[] args) {
+        new TelaInfoThread();
     }
 }

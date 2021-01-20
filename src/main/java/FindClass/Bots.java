@@ -1,7 +1,6 @@
 package FindClass;
 
 import fbSelenium.code.FacebookClass;
-import fbSelenium.frame.TelaConfig;
 import fbSelenium.frame.TelaInicial;
 
 import java.awt.*;
@@ -15,7 +14,7 @@ public class Bots {
     public static Function<Find, Exception> algoritimoExecutavel = null;
     public static boolean paginaVisivel = true;
     public static int numeroDeExecucoes;
-    public static int numeroDeThreads;
+    public static int numeroDeThreads = 4;
     public static int tempoDeEsperaDriver = 20;
 
     //localProject->
