@@ -6,23 +6,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SQL {
 
-    private static int posicaoSave = 0;
-    private static boolean primeiraExecucao = true;
-    static Connection conexao;
+    private static boolean emUso = false;
+    private static Connection conexao;
 
     //iniciar sql
     public SQL() throws SQLException {
         String url = "jdbc:mysql://localhost/infofind";
-        conexao = DriverManager.getConnection(url,"root", "");
+        conexao = DriverManager.getConnection(url,"root", "1oGDm2ZttIHPucnu");
     }
 
     //gravar todos os resultados obtidos dentro da tabela pessoasnofilter
-    synchronized public static void gravarUser(String nome, String coment, String url) throws SQLException {
+    synchronized public static void setUser(String nome, String coment, String url) throws SQLException {
 
         if(nome.length() > 50){nome = nome.substring(0,49);}
         if(coment.length() > 500){coment = coment.substring(0,499);}
@@ -123,26 +121,15 @@ public class SQL {
         gravarTXT(stringBuilder);
     }
 
-    //exclui todos os dados contidos na tabela temp
-    public static void apagarDadosTemp() throws SQLException{
-        for(int i = 0; i < 2; i++) {
-            PreparedStatement excluir = conexao.prepareStatement("DELETE FROM temp"+i+" WHERE tipo=0;");
-            excluir.executeUpdate();
-        }
-    }
-
     //exclui dados da tabela pessoasnofilter
-    public static void apagarDadosPessoasNoFilter() throws SQLException{
-        PreparedStatement excluir = conexao.prepareStatement("DELETE FROM pessoasnofilter WHERE tipo=0;");
-        excluir.executeUpdate();
+    public static void deleteDadosPessoasNoFilter(){
+        try {
+            PreparedStatement excluir = conexao.prepareStatement("DELETE FROM pessoasnofilter WHERE tipo=0;");
+            excluir.executeUpdate();
+        }catch (Exception ignored) { }
     }
 
-    //apagada dados do src dos posts verificados
-    public static void apagarDadosPosts() throws SQLException{
-        PreparedStatement excluir = conexao.prepareStatement("DELETE FROM posts WHERE tipo=0;");
-        excluir.executeUpdate();
-    }
-
+    //consulta dados filtrados em pessoasnofilter e grava em um arquivo RTF
     private static void gravarTXT(StringBuilder stringBuilder){
         Path path = Paths.get(String.format("C:\\Users\\Public\\Documents\\ResultS\\Pesquisa%f.rtf",Math.random()*50));
         byte[] save = stringBuilder.toString().getBytes();
@@ -150,6 +137,45 @@ public class SQL {
         try {
             Files.write(path,save);
         }catch (Exception ignored){ }
+    }
+
+    //carregar emails e senhas do banco de dados
+    public static List<String> getEmailslESenhas(){
+        List<String> emailESenhas = new ArrayList<>();
+        PreparedStatement preparedStatement;
+        ResultSet resultSet = null;
+            try {
+                preparedStatement = conexao.prepareStatement("SELECT * FROM emails");
+                resultSet = preparedStatement.executeQuery();
+
+                while(resultSet.next()){
+                    emailESenhas.add(String.format("%s,%s",resultSet.getString("email"),resultSet.getString("senha")));
+                }
+
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+        }
+        return  emailESenhas;
+    }
+
+    //grvar emails e senhas em banco de dados
+    public static void setEmailsESenhas(List<String> emaislESenhas){
+        PreparedStatement preparedStatement , delete;
+            try{
+
+                delete = conexao.prepareStatement("DELETE FROM emails WHERE tipo=0");
+                delete.executeUpdate();
+
+                for(String list : emaislESenhas) {
+                    preparedStatement = conexao.prepareStatement(String.format("INSERT INTO emails values('%s','%s',0);",
+                            list.split(",")[0].trim(),
+                            list.split(",")[1].trim()));
+                    preparedStatement.executeUpdate();
+                }
+
+            }catch (SQLException sqlException){
+                sqlException.printStackTrace();
+            }
     }
 
     public static void main(String[] args) throws SQLException {

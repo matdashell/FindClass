@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 
@@ -13,6 +14,7 @@ public class TelaInicial {
 
      static TelaSQL telaSQL;
      static TelaInfoThread telaInfoThread;
+     static TelaConfig telaConfig;
      static JFrame frameTelaInicial = new JFrame();
      static JPanel contentPanel = new JPanel(null);
 
@@ -32,7 +34,7 @@ public class TelaInicial {
      private static final JLabel listenerConfig = new JLabel();
      private static final JLabel listenerSQL = new JLabel();
 
-     private static final JTextField pesquisas = new JTextField();
+     public static final JTextField pesquisas = new JTextField();
 
      private static final Font font = new Font("Cinzel", Font.ITALIC ,18);
 
@@ -54,7 +56,6 @@ public class TelaInicial {
 
      private static void config(){
          telaInfoThread = new TelaInfoThread();
-         Bots.listaPesquisa = pesquisas.getText().split(",");
      }
 
      public static void end(){
@@ -64,6 +65,8 @@ public class TelaInicial {
      private static void configDemaisTelas(){
         telaSQL = new TelaSQL();
         telaSQL.getFrame().setVisible(false);
+        telaConfig = new TelaConfig();
+        telaConfig.getFrame().setVisible(false);
      }
 
      private static void configTela(){
@@ -152,9 +155,17 @@ public class TelaInicial {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(!pesquisas.getText().equals("")) {
-                    iniciar = true;
-                    botaoIniciarTrue.setVisible(false);
-                    telaSQL.getFrame().setVisible(false);
+
+                    int resposta = JOptionPane.showConfirmDialog(null,"Deseja Iniciar o programa? Certifique-se de ter configurado antes!");
+
+                    if(resposta == 0) {
+                        botaoIniciarTrue.setVisible(false);
+                        telaSQL.getFrame().setVisible(false);
+                        telaConfig.getFrame().setVisible(false);
+                        iniciar = true;
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,"Erro: Necessário definir pesquisa.");
                 }
             }
 
@@ -173,6 +184,8 @@ public class TelaInicial {
                 if(!iniciar) {
                     if(!pesquisas.getText().equals("")) {
                         botaoIniciarTrue.setVisible(true);
+                    }else{
+                        botaoIniciarFalse.setVisible(true);
                     }
                 }else{
                     botaoIniciarFalse.setVisible(true);
@@ -182,7 +195,11 @@ public class TelaInicial {
             @Override
             public void mouseExited(MouseEvent e) {
                 if(!iniciar) {
-                    botaoIniciarTrue.setVisible(false);
+                    if(!pesquisas.getText().equals("")) {
+                        botaoIniciarTrue.setVisible(false);
+                    }else{
+                        botaoIniciarFalse.setVisible(false);
+                    }
                 }else{
                     botaoIniciarFalse.setVisible(false);
                 }
@@ -220,7 +237,9 @@ public class TelaInicial {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(botaoConfigTrue.isVisible()){
-
+                    telaConfig.getFrame().setVisible(true);
+                }else{
+                    JOptionPane.showMessageDialog(null,"Só é possível configurar antes de iniciar o programa.");
                 }
             }
 
@@ -256,10 +275,9 @@ public class TelaInicial {
         listenerSQL.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(botaoSQLTrue.isVisible()){
-                    telaSQL.getFrame().setVisible(true);
-                    telaSQL.getFrame().setLocationRelativeTo(null);
-                }
+                telaSQL.getFrame().setVisible(true);
+                telaSQL.getFrame().setLocationRelativeTo(null);
+
             }
 
             @Override
@@ -274,20 +292,14 @@ public class TelaInicial {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if(!iniciar) {
-                    botaoSQLTrue.setVisible(true);
-                }else {
-                    botaoSQLFalse.setVisible(true);
-                }
+                botaoSQLTrue.setVisible(true);
+
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if(!iniciar) {
-                    botaoSQLTrue.setVisible(false);
-                }else{
-                    botaoSQLFalse.setVisible(false);
-                }
+                botaoSQLTrue.setVisible(false);
+
             }
         });
     }

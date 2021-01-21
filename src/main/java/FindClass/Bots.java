@@ -1,9 +1,12 @@
 package FindClass;
 
 import fbSelenium.code.FacebookClass;
+import fbSelenium.code.SQL;
+import fbSelenium.frame.TelaInfoThread;
 import fbSelenium.frame.TelaInicial;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -12,7 +15,7 @@ import java.util.function.Function;
 public class Bots {
 
     public static Function<Find, Exception> algoritimoExecutavel = null;
-    public static boolean paginaVisivel = true;
+    public static boolean paginaVisivel = false;
     public static int numeroDeExecucoes = 1;
     public static int numeroDeThreads = 1;
     public static int tempoDeEsperaDriver = 20;
@@ -20,14 +23,42 @@ public class Bots {
     //localProject->
 
     public static List<FacebookClass> facebook = new ArrayList<>();
-    public static String[] listaPesquisa = {"comida"};
-    public static String[] senhas = {"mcsalpikao"};
-    public static String[] emails = {"mateuslimagomes16@hotmail.com"};
+    public static List<String> listaPesquisa = new ArrayList<>();
+    public static List<String> senhas = new ArrayList<>();
+    public static List<String> emails = new ArrayList<>();
+
+    private static void setVar(){
+        SQL sql = null;
+        try {
+            sql = new SQL();
+        }catch (SQLException ignored) {
+
+        }
+
+        String[] temp = TelaInicial.pesquisas.getText().trim().split(",");
+
+        for(int i = 0; i < temp.length; i++){
+            temp[i] = temp[i].trim();
+            listaPesquisa.add(temp[i]);
+            TelaInfoThread.pesquisa.get(i).setText(temp[i]);
+        }
+
+        List<String> dados = sql.getEmailslESenhas();
+
+        for (String dado : dados) {
+            emails.add(dado.split(",")[0]);
+            senhas.add(dado.split(",")[1]);
+        }
+
+        System.out.println(emails);
+        System.out.println(senhas);
+        System.out.println(listaPesquisa);
+    }
 
     public static void main(String[] args) {
 
-        //TelaInicial telaInicial = new TelaInicial();
-
+        TelaInicial telaInicial = new TelaInicial();
+        setVar();
         config();
 
         algoritimoExecutavel = find -> {
@@ -36,9 +67,9 @@ public class Bots {
 
             sincronizador(find.getNumero()).
                     obterComentarios(
-                    listaPesquisa[find.getNumero()].trim(),
-                    emails[find.getNumero()],
-                    senhas[find.getNumero()],
+                    listaPesquisa.get(find.getNumero()).trim(),
+                    emails.get(find.getNumero()),
+                    senhas.get(find.getNumero()),
                     999,
                     find
             );
@@ -49,7 +80,7 @@ public class Bots {
             return null;
         };
         new OrdenarThreads();
-        //telaInicial.end();
+        telaInicial.end();
     }
 
     synchronized static FacebookClass sincronizador(int i) {

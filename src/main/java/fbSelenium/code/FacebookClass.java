@@ -311,18 +311,19 @@ public class FacebookClass {
     private void capturarComentarios(WebElement post){
         Set<WebElement> blocosComentarios = new HashSet<>(find.more(post, blocosDeComentarios_inPost_m));
         int cont = 0;
+        int tamanho = blocosComentarios.size();
         contTotal += blocosComentarios.size();
         atualizarTotal(contTotal);
         editarComentariosObtidos(contTotal);
 
         for(WebElement bloco : blocosComentarios){
             cont++;
+            editarLogCaixaGrafica(String.format("Gravados : %d de %d",cont,tamanho));
 
             if(find.visible(bloco, comentarios_inBlocosComents_m, 1)){
                 gravarUser(find.one(bloco, nomes_inBlocosComents_m).getText(), find.one(bloco, comentarios_inBlocosComents_m).getText(), find.one(bloco, nomes_inBlocosComents_m).getAttribute("href").split("[0]")[0]);
             }
         }
-        cont = 0;
     }
 
     public int getNumber(){
@@ -330,17 +331,17 @@ public class FacebookClass {
     }
 
     private void editarLogCaixaGrafica(String textoInfo){
-        //TelaInfoThread.log.get(getNumber()).setText(textoInfo);
+        TelaInfoThread.log.get(getNumber()).setText(textoInfo);
         System.out.println(textoInfo);
     }
 
     private void editarComentariosObtidos(int num){
-        //TelaInfoThread.quantidade.get(getNumber()).setText(String.valueOf(num));
+        TelaInfoThread.quantidade.get(getNumber()).setText(String.valueOf(num));
     }
 
     synchronized private static void gravarUser(String user, String texto, String urlUser){
         try {
-            sql.gravarUser(user, texto, urlUser);
+            sql.setUser(user, texto, urlUser);
         }catch (Exception ignored) {
 
         }

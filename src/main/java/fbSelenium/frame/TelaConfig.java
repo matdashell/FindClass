@@ -1,37 +1,129 @@
 package fbSelenium.frame;
 
+import fbSelenium.code.SQL;
+
 import javax.swing.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TelaConfig {
 
-    private static final JFrame frameConfig = new JFrame();
+    private static SQL sql;
 
-    private static final JButton excluirBanco = new JButton();
-    private static final JButton excluirPages = new JButton();
-    private static final JButton excluirTemp = new JButton();
-    private static final JButton excluirPessoasNoFilter = new JButton();
-    private static final JLabel planoFundo = new JLabel(new ImageIcon("C:\\RecursosPng\\Config"));
+    private static JFrame frameConfig = null;
+
+    private static final JButton salvar = new JButton("Salvar");
+    private static final JButton excluirSQL = new JButton("Del SQL");
+    private static final JLabel planoFundo = new JLabel(new ImageIcon("C:\\RecursosPng\\Config.png"));
     private static final JTextField emails = new JTextField();
     private static final JTextField senhas = new JTextField();
 
     TelaConfig() {
 
+        try {
+            sql = new SQL();
+        } catch (SQLException ignored) { }
+
+        setBoundsComponentes();
+        configurarTela();
+        addToFrame();
+        carregarDados();
+        addActionBotoes();
+        confirm();
     }
 
-    private static JFrame getFrame(){
-        return null;
+    public static JFrame getFrame(){
+        carregarDados();
+        return frameConfig;
     }
 
     private static void configurarTela(){
-
+        frameConfig = new JFrame();
+        frameConfig.setLayout(null);
+        frameConfig.setVisible(true);
+        frameConfig.setTitle("Configurações");
+        frameConfig.setSize(620,340);
     }
 
     private static void setBoundsComponentes(){
+        planoFundo.setBounds(0,0,600,300);
+        excluirSQL.setBounds(317,243,106,40);
+        salvar.setBounds(460,243,106,40);
+        emails.setBounds(172,43,395,33);
+        senhas.setBounds(172,102,395,33);
+    }
 
+    private static void addToFrame(){
+        frameConfig.add(excluirSQL);
+        frameConfig.add(salvar);
+        frameConfig.add(emails);
+        frameConfig.add(senhas);
+        frameConfig.add(planoFundo);
+    }
+
+    private static void confirm(){
+        frameConfig.repaint();
+        frameConfig.validate();
+        frameConfig.setLocationRelativeTo(null);
+    }
+
+    private static void carregarDados(){
+        List<String> emailsESenhas = sql.getEmailslESenhas();
+
+        StringBuilder email = new StringBuilder();
+        StringBuilder senha = new StringBuilder();
+
+        for(int i = 0; i < emailsESenhas.size(); i++){
+            if(i != emailsESenhas.size() - 1) {
+                email.append(emailsESenhas.get(i).split(",")[0]).append(", ");
+                senha.append(emailsESenhas.get(i).split(",")[1]).append(", ");
+            }else {
+                email.append(emailsESenhas.get(i).split(",")[0]);
+                senha.append(emailsESenhas.get(i).split(",")[1]);
+            }
+        }
+
+        emails.setText(email.toString());
+        senhas.setText(senha.toString());
     }
 
     private static void addActionBotoes(){
+        salvar.addActionListener(action -> {
 
+            List<String> emailESenha = new ArrayList<>();
+            String[] email = emails.getText().split(",");
+            String[] senha = senhas.getText().split(",");
+
+            if(email.length == senha.length){
+
+                for(int i = 0; i < email.length; i++){
+                    if(!email[i].trim().equals("") && !email[i].trim().equals("")) {
+                        emailESenha.add(String.format("%s,%s", email[i], senha[i]));
+                    }
+                }
+
+                sql.setEmailsESenhas(emailESenha);
+
+                JOptionPane.showMessageDialog(null,"Dados salvos.");
+
+            }else{
+                JOptionPane.showMessageDialog(null, "Erro: Quantidade de emails e senhas diferentes");
+            }
+        });
+
+        excluirSQL.addActionListener(action -> {
+            int resposta = JOptionPane.showConfirmDialog(null,"Deseja excluir base de dados?");
+
+            if(resposta == 0){
+                sql.deleteDadosPessoasNoFilter();
+                JOptionPane.showMessageDialog(null,"Base de dados apagada com sucesso.");
+            }else if(resposta == -1) {
+
+            }else {
+                JOptionPane.showMessageDialog(null,"Operação cancelada.");
+            }
+        });
     }
 
     public static void main(String[] args) {
