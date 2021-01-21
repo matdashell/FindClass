@@ -1,5 +1,10 @@
 package fbSelenium.code;
 
+import fbSelenium.frame.TelaSQL;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,34 +32,8 @@ public class SQL {
         gravar.executeUpdate();
     }
 
-    //gravar posts escaneados pela class FacebookClass para não fazer escaneamentos repetidos
-    synchronized public static void gravarPost(String urlPost) throws SQLException {
-        PreparedStatement gravar = conexao.prepareStatement("INSERT INTO posts values('"+urlPost+"',0);");
-        gravar.executeUpdate();
-    }
-
-    //excluir tabela que armazena o src dos posts
-    synchronized public static void excluirPost(String urlPost) throws SQLException {
-        PreparedStatement excluir = conexao.prepareStatement("DELETE FROM posts WHERE tipo=0;");
-        excluir.executeUpdate();
-    }
-
-    //retorna um boolean caso o post mencionado ja tenha sido escaneado
-    synchronized static boolean verificarPost(String postAtual) throws SQLException {
-        PreparedStatement query = conexao.prepareStatement("SELECT * FROM posts");
-        ResultSet qry = query.executeQuery();
-
-        Set<String> url = new HashSet<>();
-
-        while(qry.next()){
-            url.add(qry.getString("url"));
-        }
-
-        return !url.contains(postAtual);
-    }
-
     //método filter usado para o user poder filtrar os dados
-    public static void filter(String cmdFalse, String cmdTrue) throws SQLException {
+    public static void filter(String cmdFalse, String cmdTrue, boolean salvar) throws SQLException {
 
         StringBuilder statement = new StringBuilder();
         boolean aux = false;
@@ -89,51 +68,64 @@ public class SQL {
         }
 
         PreparedStatement filter;
-        ResultSet rs = null;
+        ResultSet rsFilter;
 
-        if(primeiraExecucao) {
-
+        if(!salvar) {
             try {
-                filter = conexao.prepareStatement("SELECT * FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
-                rs = filter.executeQuery();
-            } catch (SQLException ignore) {
+
+                System.out.println("SELECT COUNT(comentario) FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
+
+                //Obter numero obtido pelo filtro
+                filter = conexao.prepareStatement("SELECT COUNT(comentario) FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
+                rsFilter = filter.executeQuery();
+
+                while (rsFilter.next()) {
+                    System.out.println(rsFilter.getInt(1));
+                    TelaSQL.labelNumero.setText(String.valueOf(rsFilter.getInt(1)));
+                }
+
+
+            } catch (SQLException sqlException) {
+                System.out.println("erro");
             }
         }else{
-
-            try {
-                filter = conexao.prepareStatement("SELECT * FROM temp"+(posicaoSave-1)+" WHERE " + statement.toString().trim() + ";");
-                rs = filter.executeQuery();
-            } catch (SQLException ignore) {
-            }
+            salvar(statement);
         }
 
-        if(rs.next()) {
-            while (rs.next()) {
-                auxConsulta(rs);
-            }
-            posicaoSave++;
-        }
     }
 
-    //auxiliar de consulta que exclui e grava os dados obtidos para que se possa atualizar as tabelas temp
-    private static void auxConsulta(ResultSet resultSet) throws SQLException{
-        primeiraExecucao = false;
-        if(posicaoSave == 10){ posicaoSave = 0; }
+    public static void salvar(StringBuilder statement){
 
-        PreparedStatement excluir = conexao.prepareStatement("DELETE FROM temp"+posicaoSave+" WHERE tipo=0;");
-        excluir.executeUpdate();
+        StringBuilder stringBuilder = new StringBuilder();
+        PreparedStatement filter;
+        ResultSet rsFilter;
 
-        PreparedStatement gravar = conexao.prepareStatement("INSERT INTO temp"+posicaoSave+" values(" +
-                "'"+resultSet.getString("nome")+"'," +
-                "'"+resultSet.getString("comentario")+"'," +
-                "'"+resultSet.getString("url")+"'," +
-                "0);");
-        gravar.executeUpdate();
+        try {
+
+            //Obter pessoas que passaram pelo filtro
+            filter = conexao.prepareStatement("SELECT * FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
+            rsFilter = filter.executeQuery();
+
+            //gravar os dados em arquivo txt
+            while (rsFilter.next()) {
+                stringBuilder.append(String.format("User: %s \n\n Comentou: %s \n\n Url: %s",
+                        rsFilter.getString("nome"),
+                        rsFilter.getString("comentario"),
+                        rsFilter.getString("url")
+                        )
+                ).append("\n-----------------------------------------------------------------\n");
+            }
+        }
+        catch (Exception ignored){
+
+        }
+
+        gravarTXT(stringBuilder);
     }
 
     //exclui todos os dados contidos na tabela temp
     public static void apagarDadosTemp() throws SQLException{
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 2; i++) {
             PreparedStatement excluir = conexao.prepareStatement("DELETE FROM temp"+i+" WHERE tipo=0;");
             excluir.executeUpdate();
         }
@@ -151,8 +143,16 @@ public class SQL {
         excluir.executeUpdate();
     }
 
+    private static void gravarTXT(StringBuilder stringBuilder){
+        Path path = Paths.get(String.format("C:\\Users\\Public\\Documents\\ResultS\\Pesquisa%f.rtf",Math.random()*50));
+        byte[] save = stringBuilder.toString().getBytes();
+
+        try {
+            Files.write(path,save);
+        }catch (Exception ignored){ }
+    }
+
     public static void main(String[] args) throws SQLException {
         new SQL();
-        filter("jesess","o,s");
     }
 }

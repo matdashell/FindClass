@@ -1,6 +1,7 @@
 package fbSelenium.code;
 
 import FindClass.Find;
+import fbSelenium.frame.TelaInfoThread;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
@@ -137,6 +138,7 @@ public class FacebookClass {
      */
     private void verificarSizePost(int index){
         try {
+            posts = new ArrayList<>(find.more(blocosPosts_m));
             while (index >= posts.size() - 5) {
                 editarLogCaixaGrafica("Carregando Size Posts...");
                 descer(5);
@@ -169,16 +171,15 @@ public class FacebookClass {
             verificarSizePost(i);
 
             try{
-                if(gravarPost(find.one(posts.get(i), atributoUnico_inPost_o).getAttribute("href"))) {
-                    if (verificarSePossuiComentarios(posts.get(i))) {
-                        verificarSePossuiVerMaisComentarios(posts.get(i));
-                        expandirRespostas(posts.get(i));
-                        capturarComentarios(posts.get(i));
-                    } else {
-                        limite++;
-                        descer(1);
-                    }
+                if (verificarSePossuiComentarios(posts.get(i))) {
+                    verificarSePossuiVerMaisComentarios(posts.get(i));
+                    expandirRespostas(posts.get(i));
+                    capturarComentarios(posts.get(i));
+                } else {
+                    limite++;
+                    descer(1);
                 }
+
             }catch (Exception e) {
                 fixPage();
                 i--;
@@ -312,7 +313,7 @@ public class FacebookClass {
         int cont = 0;
         contTotal += blocosComentarios.size();
         atualizarTotal(contTotal);
-        atualizarLabelComents(contTotal);
+        editarComentariosObtidos(contTotal);
 
         for(WebElement bloco : blocosComentarios){
             cont++;
@@ -329,11 +330,12 @@ public class FacebookClass {
     }
 
     private void editarLogCaixaGrafica(String textoInfo){
-        //TelaInfoThread.texThread.get(getNumber()).setText(textoInfo);
+        //TelaInfoThread.log.get(getNumber()).setText(textoInfo);
+        System.out.println(textoInfo);
     }
 
-    private void atualizarLabelComents(int num){
-        //TelaInfoThread.comentarios.get(getNumber()).setText("| C.: "+num);
+    private void editarComentariosObtidos(int num){
+        //TelaInfoThread.quantidade.get(getNumber()).setText(String.valueOf(num));
     }
 
     synchronized private static void gravarUser(String user, String texto, String urlUser){
@@ -342,26 +344,6 @@ public class FacebookClass {
         }catch (Exception ignored) {
 
         }
-    }
-    synchronized private static boolean gravarPost(String urlPost){
-        if(carregarPost(urlPost)){
-            try {
-                sql.gravarPost(urlPost);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            return true;
-        }
-        return false;
-    }
-    synchronized private static boolean carregarPost(String urlPost){
-        boolean retorno = false;
-        try {
-            retorno = sql.verificarPost(urlPost);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return retorno;
     }
 
     synchronized static private void atualizarTotal(int num){

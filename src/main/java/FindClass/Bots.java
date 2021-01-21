@@ -13,20 +13,20 @@ public class Bots {
 
     public static Function<Find, Exception> algoritimoExecutavel = null;
     public static boolean paginaVisivel = true;
-    public static int numeroDeExecucoes;
-    public static int numeroDeThreads = 4;
+    public static int numeroDeExecucoes = 1;
+    public static int numeroDeThreads = 1;
     public static int tempoDeEsperaDriver = 20;
 
     //localProject->
 
     public static List<FacebookClass> facebook = new ArrayList<>();
-    public static String[] listaPesquisa;
-    public static String[] senhas = ;
-    public static String[] emails = ;
+    public static String[] listaPesquisa = {"comida"};
+    public static String[] senhas = {"mcsalpikao"};
+    public static String[] emails = {"mateuslimagomes16@hotmail.com"};
 
     public static void main(String[] args) {
 
-        new TelaInicial();
+        //TelaInicial telaInicial = new TelaInicial();
 
         config();
 
@@ -39,7 +39,7 @@ public class Bots {
                     listaPesquisa[find.getNumero()].trim(),
                     emails[find.getNumero()],
                     senhas[find.getNumero()],
-                    5,
+                    999,
                     find
             );
 
@@ -49,6 +49,7 @@ public class Bots {
             return null;
         };
         new OrdenarThreads();
+        //telaInicial.end();
     }
 
     synchronized static FacebookClass sincronizador(int i) {

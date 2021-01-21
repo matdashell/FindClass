@@ -18,7 +18,7 @@ public class TelaInfoThread {
     public static List<JLabel> log = new ArrayList<>();
     public static List<JLabel> planoFundo = new ArrayList<>();
 
-    private static Font font = new Font("Cinzel", Font.ITALIC ,14);
+    private static final Font font = new Font("Cinzel", Font.ITALIC ,14);
 
     TelaInfoThread() {
         configurarComponentes();
@@ -33,20 +33,20 @@ public class TelaInfoThread {
         for(int i = 0; i < Bots.numeroDeThreads; i++){
 
             blocosInfo.add(new JPanel(null));
-            numeroThread.add(new JLabel("Numero:"));
+            numeroThread.add(new JLabel("Numero: "+i));
             pesquisa.add(new JLabel("Pesq.:"));
             quantidade.add(new JLabel("Total:"));
             restantes.add(new JLabel("Restante:"));
             log.add(new JLabel("Log:"));
             planoFundo.add(new JLabel(new ImageIcon("C:\\RecursosPng\\planoFundoInfoThread.png")));
 
-            blocosInfo.get(i).setBounds(0,50*i,900,50);
-            numeroThread.get(i).setBounds(10,11,100,25);
-            pesquisa.get(i).setBounds(145,11,100,25);
-            quantidade.get(i).setBounds(280,11,100,25);
-            restantes.get(i).setBounds(420,11,100,25);
-            log.get(i).setBounds(555,11,400,25);
-            planoFundo.get(i).setBounds(0,0,900,50);
+            blocosInfo.get(i).setBounds(0,50*i,975,60);
+            numeroThread.get(i).setBounds(10,20,100,25);
+            pesquisa.get(i).setBounds(155,20,100,25);
+            quantidade.get(i).setBounds(300,20,100,25);
+            restantes.get(i).setBounds(450,20,100,25);
+            log.get(i).setBounds(600,20,400,25);
+            planoFundo.get(i).setBounds(0,0,975,60);
 
             numeroThread.get(i).setFont(font);
             pesquisa.get(i).setFont(font);
@@ -64,7 +64,7 @@ public class TelaInfoThread {
             contentPanelInforThread.add(blocosInfo.get(i));
         }
         contentPanelInforThread.setLayout(null);
-        contentPanelInforThread.setBounds(60,245,900,200);
+        contentPanelInforThread.setBounds(22,240,975,210);
     }
 
     public static void main(String[] args) {

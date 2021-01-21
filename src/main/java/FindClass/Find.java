@@ -34,7 +34,7 @@ public class Find {
 
     //configuração para iniciar o driver
     public void init(boolean headless) throws AWTException {
-        System.setProperty("webdriver.chrome.driver", "E:\\BotProgram\\Program\\Resources\\chromedriverH.exe");
+        System.setProperty("webdriver.chrome.driver", "E:\\BotProgram\\Program\\Resources\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         if(!headless) { options.addArguments("--headless"); }
         driver = new ChromeDriver(options);

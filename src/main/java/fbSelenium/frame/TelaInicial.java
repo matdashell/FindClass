@@ -1,5 +1,7 @@
 package fbSelenium.frame;
 
+import FindClass.Bots;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -12,7 +14,7 @@ public class TelaInicial {
      static TelaSQL telaSQL;
      static TelaInfoThread telaInfoThread;
      static JFrame frameTelaInicial = new JFrame();
-     static JPanel contenPanel = new JPanel(null);
+     static JPanel contentPanel = new JPanel(null);
 
      private static final JLabel botaoIniciarTrue = new JLabel(new ImageIcon("C:\\RecursosPng\\IniciarTrue.png"));
      private static final JLabel botaoIniciarFalse = new JLabel(new ImageIcon("C:\\RecursosPng\\IniciarFalse.png"));
@@ -30,6 +32,10 @@ public class TelaInicial {
      private static final JLabel listenerConfig = new JLabel();
      private static final JLabel listenerSQL = new JLabel();
 
+     private static final JTextField pesquisas = new JTextField();
+
+     private static final Font font = new Font("Cinzel", Font.ITALIC ,18);
+
      static volatile boolean iniciar = false;
 
      public TelaInicial(){
@@ -41,23 +47,32 @@ public class TelaInicial {
         actionComponentes();
         confirm();
         while(!iniciar){}
+        config();
         animacao();
+
+     }
+
+     private static void config(){
+         telaInfoThread = new TelaInfoThread();
+         Bots.listaPesquisa = pesquisas.getText().split(",");
+     }
+
+     public static void end(){
 
      }
 
      private static void configDemaisTelas(){
         telaSQL = new TelaSQL();
-        telaInfoThread = new TelaInfoThread();
         telaSQL.getFrame().setVisible(false);
      }
 
      private static void configTela(){
-         contenPanel.setPreferredSize(new Dimension(1024,768));
-         frameTelaInicial.setPreferredSize(contenPanel.getPreferredSize());
+         contentPanel.setPreferredSize(new Dimension(1024,768));
+         frameTelaInicial.setPreferredSize(contentPanel.getPreferredSize());
          frameTelaInicial.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
          frameTelaInicial.setVisible(true);
          frameTelaInicial.setResizable(false);
-         frameTelaInicial.add(contenPanel);
+         frameTelaInicial.add(contentPanel);
      }
 
      private static void setBoundsComponentes(){
@@ -71,6 +86,9 @@ public class TelaInicial {
          botaoSQLFalse.setBounds(11,490,272,266);
          postCertta.setBounds(20,198,980,300);
          telaInicial.setBounds(0,0,1024,768);
+         pesquisas.setBounds(314,592,670,68);
+
+         pesquisas.setFont(font);
 
          listenerIniciar.setBounds(2,3,521,198);
          listenerInfo.setBounds(523,3,260,201);
@@ -79,21 +97,22 @@ public class TelaInicial {
      }
 
      private static void addToPanel(){
-         contenPanel.add(listenerIniciar);
-         contenPanel.add(listenerInfo);
-         contenPanel.add(listenerConfig);
-         contenPanel.add(listenerSQL);
-         contenPanel.add(botaoIniciarFalse);
-         contenPanel.add(botaoInfoFalse);
-         contenPanel.add(botaoConfigFalse);
-         contenPanel.add(botaoSQLFalse);
-         contenPanel.add(botaoIniciarTrue);
-         contenPanel.add(botaoInfoTrue);
-         contenPanel.add(botaoConfigTrue);
-         contenPanel.add(botaoSQLTrue);
-         contenPanel.add(postCertta);
-         contenPanel.add(telaInfoThread.getPanel());
-         contenPanel.add(telaInicial);
+         contentPanel.add(listenerIniciar);
+         contentPanel.add(listenerInfo);
+         contentPanel.add(listenerConfig);
+         contentPanel.add(listenerSQL);
+         contentPanel.add(botaoIniciarFalse);
+         contentPanel.add(botaoInfoFalse);
+         contentPanel.add(botaoConfigFalse);
+         contentPanel.add(botaoSQLFalse);
+         contentPanel.add(botaoIniciarTrue);
+         contentPanel.add(botaoInfoTrue);
+         contentPanel.add(botaoConfigTrue);
+         contentPanel.add(botaoSQLTrue);
+         contentPanel.add(postCertta);
+         contentPanel.add(telaInfoThread.getPanel());
+         contentPanel.add(pesquisas);
+         contentPanel.add(telaInicial);
      }
 
      private static void visibilidade(){
@@ -124,15 +143,19 @@ public class TelaInicial {
              try{sleep(3);}catch (Exception ignored) { }
              postCertta.setLocation((int)(postCertta.getLocation().getX()-1), (int)(postCertta.getLocation().getY()));
          }
+
+         pesquisas.setVisible(false);
      }
 
     private static void actionComponentes(){
         listenerIniciar.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                iniciar = true;
-                botaoIniciarTrue.setVisible(false);
-                telaSQL.getFrame().setVisible(false);
+                if(!pesquisas.getText().equals("")) {
+                    iniciar = true;
+                    botaoIniciarTrue.setVisible(false);
+                    telaSQL.getFrame().setVisible(false);
+                }
             }
 
             @Override
@@ -148,7 +171,9 @@ public class TelaInicial {
             @Override
             public void mouseEntered(MouseEvent e) {
                 if(!iniciar) {
-                    botaoIniciarTrue.setVisible(true);
+                    if(!pesquisas.getText().equals("")) {
+                        botaoIniciarTrue.setVisible(true);
+                    }
                 }else{
                     botaoIniciarFalse.setVisible(true);
                 }
