@@ -30,7 +30,7 @@ public class TelaInfoThread {
 
     private static void configurarComponentes(){
 
-        for(int i = 0; i < Bots.numeroDeThreads; i++){
+        for(int i = 0; i < TelaInicial.pesquisas.getText().split(",").length; i++){
 
             blocosInfo.add(new JPanel(null));
             numeroThread.add(new JLabel("Numero: "+i));

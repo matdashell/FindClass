@@ -25,12 +25,12 @@ public class TelaInfo {
 
     private static void configFrame(){
         frame = new JFrame();
+        frame.setVisible(false);
         JScrollPane scrollPane = new JScrollPane(conerPanel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         frame.add(scrollPane);
         frame.setPreferredSize(new Dimension(1100,600));
-        frame.setVisible(true);
     }
 
     private static void confirm(){

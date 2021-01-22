@@ -44,11 +44,11 @@ public class TelaSQL {
 
     private static void configurarTela(){
         frameSQL = new JFrame();
+        frameSQL.setVisible(false);
         frameSQL.setPreferredSize(new Dimension(610,320));
         frameSQL.setResizable(false);
         frameSQL.setTitle("SQL");
         frameSQL.add(contentPanelSQL);
-        frameSQL.setVisible(true);
     }
 
     private static void setBoundsComponentes(){

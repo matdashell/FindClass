@@ -40,8 +40,8 @@ public class TelaConfig {
 
     private static void configurarTela(){
         frameConfig = new JFrame();
+        frameConfig.setVisible(false);
         frameConfig.setLayout(null);
-        frameConfig.setVisible(true);
         frameConfig.setTitle("Configurações");
         frameConfig.setSize(620,340);
     }

@@ -16,9 +16,9 @@ public class Bots {
 
     public static Function<Find, Exception> algoritimoExecutavel = null;
     public static boolean paginaVisivel = false;
-    public static int numeroDeExecucoes = 1;
-    public static int numeroDeThreads = 1;
-    public static int tempoDeEsperaDriver = 20;
+    public static int numeroDeExecucoes;
+    public static int numeroDeThreads;
+    public static int tempoDeEsperaDriver;
 
     //localProject->
 
@@ -37,6 +37,11 @@ public class Bots {
 
         String[] temp = TelaInicial.pesquisas.getText().trim().split(",");
 
+        numeroDeExecucoes = temp.length;
+        numeroDeThreads = temp.length;
+
+        tempoDeEsperaDriver = (temp.length)*7;
+
         for(int i = 0; i < temp.length; i++){
             temp[i] = temp[i].trim();
             listaPesquisa.add(temp[i]);
@@ -50,9 +55,9 @@ public class Bots {
             senhas.add(dado.split(",")[1]);
         }
 
+        System.out.println(listaPesquisa);
         System.out.println(emails);
         System.out.println(senhas);
-        System.out.println(listaPesquisa);
     }
 
     public static void main(String[] args) {

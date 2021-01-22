@@ -1,16 +1,20 @@
 package fbSelenium.frame;
 
 import FindClass.Bots;
+import fbSelenium.code.SQL;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 
 public class TelaInicial {
+
+     static SQL sql = null;
 
      static TelaSQL telaSQL;
      static TelaInfoThread telaInfoThread;
@@ -42,6 +46,7 @@ public class TelaInicial {
      static volatile boolean iniciar = false;
 
      public TelaInicial(){
+        initSql();
         configDemaisTelas();
         setBoundsComponentes();
         visibilidade();
@@ -55,6 +60,14 @@ public class TelaInicial {
 
      }
 
+     private static void initSql(){
+         try {
+             sql = new SQL();
+         } catch (SQLException sqlException) {
+             sqlException.printStackTrace();
+         }
+     }
+
      private static void config(){
          telaInfoThread = new TelaInfoThread();
      }
@@ -65,11 +78,8 @@ public class TelaInicial {
 
      private static void configDemaisTelas(){
         telaSQL = new TelaSQL();
-        telaSQL.getFrame().setVisible(false);
         telaConfig = new TelaConfig();
-        telaConfig.getFrame().setVisible(false);
         telaInfo = new TelaInfo();
-        telaInfo.getFrame().setVisible(false);
      }
 
      private static void configTela(){
@@ -157,19 +167,28 @@ public class TelaInicial {
         listenerIniciar.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(!pesquisas.getText().equals("")) {
 
-                    int resposta = JOptionPane.showConfirmDialog(null,"Deseja Iniciar o programa? Certifique-se de ter configurado antes!");
+                if (!pesquisas.getText().equals("")) {
+
+                    int resposta = JOptionPane.showConfirmDialog(null, "Deseja Iniciar o programa? Certifique-se de ter configurado antes!");
 
                     if(resposta == 0) {
-                        botaoIniciarTrue.setVisible(false);
-                        telaSQL.getFrame().setVisible(false);
-                        telaConfig.getFrame().setVisible(false);
-                        iniciar = true;
+
+                        if (pesquisas.getText().split(",").length <= sql.getEmailslESenhas().size()) {
+
+                            botaoIniciarTrue.setVisible(false);
+                            telaSQL.getFrame().setVisible(false);
+                            telaConfig.getFrame().setVisible(false);
+                            iniciar = true;
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erro: Número de emails cadastrados é inferior ao número de pesquisas");
+                        }
                     }
-                }else{
-                    JOptionPane.showMessageDialog(null,"Erro: Necessário definir pesquisa.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Erro: Necessário definir pesquisa.");
                 }
+
             }
 
             @Override
