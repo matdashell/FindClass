@@ -15,6 +15,7 @@ public class TelaInicial {
      static TelaSQL telaSQL;
      static TelaInfoThread telaInfoThread;
      static TelaConfig telaConfig;
+     static TelaInfo telaInfo;
      static JFrame frameTelaInicial = new JFrame();
      static JPanel contentPanel = new JPanel(null);
 
@@ -67,6 +68,8 @@ public class TelaInicial {
         telaSQL.getFrame().setVisible(false);
         telaConfig = new TelaConfig();
         telaConfig.getFrame().setVisible(false);
+        telaInfo = new TelaInfo();
+        telaInfo.getFrame().setVisible(false);
      }
 
      private static void configTela(){
@@ -209,7 +212,8 @@ public class TelaInicial {
         listenerInfo.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                telaInfo.getFrame().setLocationRelativeTo(null);
+                telaInfo.getFrame().setVisible(true);
             }
 
             @Override
@@ -237,6 +241,7 @@ public class TelaInicial {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(botaoConfigTrue.isVisible()){
+                    telaConfig.getFrame().setLocationRelativeTo(null);
                     telaConfig.getFrame().setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null,"Só é possível configurar antes de iniciar o programa.");

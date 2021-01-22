@@ -20,7 +20,7 @@ public class OrdenarThreads{
 
     public static void executarThreads(){
         while(MyThread.quantidadeDeExecucoesNucleo < Bots.numeroDeExecucoes){
-            try{sleep(1000);}catch (Exception e){}
+            try{sleep(1000);}catch (Exception ignored){}
             myThreadList
                     .forEach(myThread -> {
                     if (!myThread.processar && controleDeExecucoes < Bots.numeroDeExecucoes) {

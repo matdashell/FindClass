@@ -331,12 +331,12 @@ public class FacebookClass {
     }
 
     private void editarLogCaixaGrafica(String textoInfo){
-        TelaInfoThread.log.get(getNumber()).setText(textoInfo);
+        TelaInfoThread.log.get(getNumber()).setText("Log: "+textoInfo);
         System.out.println(textoInfo);
     }
 
     private void editarComentariosObtidos(int num){
-        TelaInfoThread.quantidade.get(getNumber()).setText(String.valueOf(num));
+        TelaInfoThread.quantidade.get(getNumber()).setText("Total: "+num);
     }
 
     synchronized private static void gravarUser(String user, String texto, String urlUser){

@@ -37,7 +37,7 @@ public class TelaSQL {
         try {
             sql = new SQL();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Necessário Iniciar program XAMPP");
+            JOptionPane.showMessageDialog(null, "Necessário Iniciar programa XAMPP");
             System.exit(0);
         }
     }
