@@ -64,12 +64,15 @@ public class TelaInicial {
          try {
              sql = new SQL();
          } catch (SQLException sqlException) {
-             sqlException.printStackTrace();
+             JOptionPane.showMessageDialog(null,"Erro: Necessário iniciar o programa XAMPP (Apache, SQL)");
+             System.exit(0);
          }
      }
 
      private static void config(){
          telaInfoThread = new TelaInfoThread();
+         frameTelaInicial.validate();
+         frameTelaInicial.repaint();
      }
 
      public static void end(){
@@ -80,10 +83,11 @@ public class TelaInicial {
         telaSQL = new TelaSQL();
         telaConfig = new TelaConfig();
         telaInfo = new TelaInfo();
+
      }
 
      private static void configTela(){
-         contentPanel.setPreferredSize(new Dimension(1024,768));
+         contentPanel.setPreferredSize(new Dimension(1044,768));
          frameTelaInicial.setPreferredSize(contentPanel.getPreferredSize());
          frameTelaInicial.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
          frameTelaInicial.setVisible(true);
@@ -96,8 +100,8 @@ public class TelaInicial {
          botaoIniciarFalse.setBounds(2,3,521,198);
          botaoInfoTrue.setBounds(523,3,260,201);
          botaoInfoFalse.setBounds(523,3,260,201);
-         botaoConfigTrue.setBounds(783,3,226,200);
-         botaoConfigFalse.setBounds(783,3,226,200);
+         botaoConfigTrue.setBounds(786,5,226,200);
+         botaoConfigFalse.setBounds(786,5,226,200);
          botaoSQLTrue.setBounds(11,490,272,266);
          botaoSQLFalse.setBounds(11,490,272,266);
          postCertta.setBounds(20,198,980,300);
@@ -150,13 +154,13 @@ public class TelaInicial {
 
      private static void animacao(){
          while(postCertta.getLocation().getX() < 1024) {
-             try{sleep(3);}catch (Exception ignored) { }
+             try{sleep(1);}catch (Exception ignored) { }
              postCertta.setLocation((int)(postCertta.getLocation().getX()+1), (int)(postCertta.getLocation().getY()));
          }
          postCertta.setLocation(1024,475);
 
          while(postCertta.getLocation().getX() > 283){
-             try{sleep(3);}catch (Exception ignored) { }
+             try{sleep(1);}catch (Exception ignored) { }
              postCertta.setLocation((int)(postCertta.getLocation().getX()-1), (int)(postCertta.getLocation().getY()));
          }
 
@@ -168,7 +172,7 @@ public class TelaInicial {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                if (!pesquisas.getText().equals("")) {
+                if (!pesquisas.getText().trim().equals("")) {
 
                     int resposta = JOptionPane.showConfirmDialog(null, "Deseja Iniciar o programa? Certifique-se de ter configurado antes!");
 

@@ -26,6 +26,7 @@ public class TelaInfo {
     private static void configFrame(){
         frame = new JFrame();
         frame.setVisible(false);
+        frame.setResizable(false);
         JScrollPane scrollPane = new JScrollPane(conerPanel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);

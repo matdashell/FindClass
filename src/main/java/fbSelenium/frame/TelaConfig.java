@@ -18,6 +18,7 @@ public class TelaConfig {
     private static final JLabel planoFundo = new JLabel(new ImageIcon("C:\\RecursosPng\\Config.png"));
     private static final JTextField emails = new JTextField();
     private static final JTextField senhas = new JTextField();
+    private static final JTextField diasMin = new JTextField();
 
     TelaConfig() {
 
@@ -44,6 +45,7 @@ public class TelaConfig {
         frameConfig.setLayout(null);
         frameConfig.setTitle("Configurações");
         frameConfig.setSize(620,340);
+        frameConfig.setResizable(false);
     }
 
     private static void setBoundsComponentes(){
@@ -52,6 +54,7 @@ public class TelaConfig {
         salvar.setBounds(460,243,106,40);
         emails.setBounds(172,43,395,33);
         senhas.setBounds(172,102,395,33);
+        diasMin.setBounds(172,160,107,33);
     }
 
     private static void addToFrame(){
@@ -59,6 +62,7 @@ public class TelaConfig {
         frameConfig.add(salvar);
         frameConfig.add(emails);
         frameConfig.add(senhas);
+        frameConfig.add(diasMin);
         frameConfig.add(planoFundo);
     }
 
@@ -86,6 +90,7 @@ public class TelaConfig {
 
         emails.setText(email.toString());
         senhas.setText(senha.toString());
+        diasMin.setText(sql.getConfig());
     }
 
     private static void addActionBotoes(){
@@ -105,10 +110,22 @@ public class TelaConfig {
 
                 sql.setEmailsESenhas(emailESenha);
 
-                JOptionPane.showMessageDialog(null,"Dados salvos.");
-
             }else{
                 JOptionPane.showMessageDialog(null, "Erro: Quantidade de emails e senhas diferentes");
+            }
+
+            try{
+                if(!diasMin.getText().trim().equals("")) {
+                    int dias = Integer.parseInt(diasMin.getText());
+                    sql.setConfig(dias);
+
+                    JOptionPane.showMessageDialog(null,"Dados salvos.");
+
+                }else {
+                    JOptionPane.showMessageDialog(null,"Erro: Campo de dias mínimos incorreto");
+                }
+            }catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"Erro: Campo de dias mínimos incorreto");
             }
         });
 

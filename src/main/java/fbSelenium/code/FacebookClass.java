@@ -58,6 +58,9 @@ public class FacebookClass {
     //blocos de comentarios com a primeira div sendo o proprio comentario e a segunda div o comentario das outras pessoas
     private static final String blocosDeComentarios_inPost_m = "css div[class='g3eujd1d ni8dbmo4 stjgntxs hv4rvrfc']";
 
+    //tempo do comentario dentro do bloco de comentario
+    private static final String tempoComentario_inBlocoComents_i = "css a > span[class='tojvnm2t a6sixzi8 abs2jz4q a8s20v7p t1p8iaqh k5wvi7nf q3lfd5jv pk4s997a bipmatt0 cebpdrjk qowsmv63 owwhemhu dp1hu0rb dhp61c6y iyyx5f41']";
+
     //nome de usuário dentro do bloco (getText retorna o nome e getAtribute pelo 'href' retorna o link de perfil)
     private static final String nomes_inBlocosComents_m = "css a[class='oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gmql0nx0 gpro0wi8']";
 
@@ -78,8 +81,12 @@ public class FacebookClass {
         find.more(FacebookClass.email_senha_m).get(1).sendKeys(senha);
         find.more(FacebookClass.email_senha_m).get(1).sendKeys(Keys.ENTER);
         find.waitWhileDisable(pesquisa_o);
-        find.time(1000);
-        editarLogCaixaGrafica("Logado!");
+        find.time(10000);
+        if(find.driver.getCurrentUrl().equals("https://www.facebook.com")) {
+            editarLogCaixaGrafica("Logado!");
+        }else{
+            editarLogCaixaGrafica("Erro com informações de login!");
+        }
     }
 
     /*
@@ -88,7 +95,6 @@ public class FacebookClass {
     private void pesquisar(String pesquisa){
         find.one(FacebookClass.pesquisa_o).sendKeys("#"+pesquisa);
         find.one(FacebookClass.pesquisa_o).sendKeys(Keys.ENTER);
-        find.time(10000);
         editarLogCaixaGrafica("Aguardando pesquisa...");
         find.time(10000);
     }
@@ -169,6 +175,7 @@ public class FacebookClass {
         for (int i = 0; i < limite; i++) {
 
             verificarSizePost(i);
+            TelaInfoThread.postNum.get(getNumber()).setText("Post: "+i);
 
             try{
                 if (verificarSePossuiComentarios(posts.get(i))) {
@@ -321,7 +328,29 @@ public class FacebookClass {
             editarLogCaixaGrafica(String.format("Gravados : %d de %d",cont,tamanho));
 
             if(find.visible(bloco, comentarios_inBlocosComents_m, 1)){
-                gravarUser(find.one(bloco, nomes_inBlocosComents_m).getText(), find.one(bloco, comentarios_inBlocosComents_m).getText(), find.one(bloco, nomes_inBlocosComents_m).getAttribute("href").split("[0]")[0]);
+
+                String[] tempoDoComentario = find.one(bloco, tempoComentario_inBlocoComents_i).getText().split(" ");
+                int dias;
+
+                switch (tempoDoComentario[1]) {
+                    case "h":
+                    case "min":
+                        dias = 1;
+                        break;
+                    case "d":
+                        dias = Integer.parseInt(tempoDoComentario[0]);
+                        break;
+                    case "sem":
+                        dias = (Integer.parseInt(tempoDoComentario[0])) * 7;
+                        break;
+                    default:
+                        dias = 120;
+                        break;
+                }
+
+                System.out.println(tempoDoComentario[1]+" "+dias);
+
+                gravarUser(find.one(bloco, nomes_inBlocosComents_m).getText(), find.one(bloco, comentarios_inBlocosComents_m).getText(), find.one(bloco, nomes_inBlocosComents_m).getAttribute("href").split("[0]")[0], dias);
             }
         }
     }
@@ -339,9 +368,9 @@ public class FacebookClass {
         TelaInfoThread.quantidade.get(getNumber()).setText("Total: "+num);
     }
 
-    synchronized private static void gravarUser(String user, String texto, String urlUser){
+    synchronized private static void gravarUser(String user, String texto, String urlUser, int dias){
         try {
-            sql.setUser(user, texto, urlUser);
+            sql.setUser(user, texto, urlUser, dias);
         }catch (Exception ignored) {
 
         }

@@ -10,7 +10,6 @@ import java.util.*;
 
 public class SQL {
 
-    private static boolean emUso = false;
     private static Connection conexao;
 
     //iniciar sql
@@ -20,13 +19,13 @@ public class SQL {
     }
 
     //gravar todos os resultados obtidos dentro da tabela pessoasnofilter
-    synchronized public static void setUser(String nome, String coment, String url) throws SQLException {
+    synchronized public static void setUser(String nome, String coment, String url, int dias) throws SQLException {
 
         if(nome.length() > 50){nome = nome.substring(0,49);}
         if(coment.length() > 500){coment = coment.substring(0,499);}
         if(url.length() > 100){url = url.substring(0,99);}
 
-        PreparedStatement gravar = conexao.prepareStatement("INSERT INTO pessoasnofilter values('"+nome+"','"+coment+"','"+url+"',0);");
+        PreparedStatement gravar = conexao.prepareStatement(String.format("INSERT INTO pessoasnofilter values('%s','%s','%s',0,%d);",nome,coment,url,dias));
         gravar.executeUpdate();
     }
 
@@ -61,6 +60,9 @@ public class SQL {
                 statement.append("comentario LIKE '%").append(temp[i].trim()).append("%'");
                 if(i != temp.length-1){
                     statement.append(" AND ");
+                }else{
+                    statement.append(" AND dias<=").append(getConfig());
+
                 }
             }
         }
@@ -77,11 +79,21 @@ public class SQL {
                 filter = conexao.prepareStatement("SELECT COUNT(comentario) FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
                 rsFilter = filter.executeQuery();
 
+                int tamanhoPesquisa = 0;
+                int tamanhoBanco = 0;
+
                 while (rsFilter.next()) {
-                    System.out.println(rsFilter.getInt(1));
-                    TelaSQL.labelNumero.setText(String.valueOf(rsFilter.getInt(1)));
+                    tamanhoPesquisa = rsFilter.getInt(1);
                 }
 
+                filter = conexao.prepareStatement("SELECT COUNT(comentario) FROM pessoasnofilter");
+                rsFilter = filter.executeQuery();
+
+                while(rsFilter.next()){
+                    tamanhoBanco = rsFilter.getInt(1);
+                }
+
+                TelaSQL.labelNumero.setText(String.format("%d de %d",tamanhoPesquisa,tamanhoBanco));
 
             } catch (SQLException sqlException) {
                 System.out.println("erro");
@@ -106,9 +118,10 @@ public class SQL {
 
             //gravar os dados em arquivo txt
             while (rsFilter.next()) {
-                stringBuilder.append(String.format("User: %s \n\n Comentou: %s \n\n Url: %s",
+                stringBuilder.append(String.format("  User: %s \n\n ➤Comentou: %s \nHá %s dia(s) \n\n Url: %s",
                         rsFilter.getString("nome"),
                         rsFilter.getString("comentario"),
+                        getConfig(),
                         rsFilter.getString("url")
                         )
                 ).append("\n-----------------------------------------------------------------\n");
@@ -131,7 +144,7 @@ public class SQL {
 
     //consulta dados filtrados em pessoasnofilter e grava em um arquivo RTF
     private static void gravarTXT(StringBuilder stringBuilder){
-        Path path = Paths.get(String.format("C:\\Users\\Public\\Documents\\ResultS\\Pesquisa%f.rtf",Math.random()*50));
+        Path path = Paths.get("C:\\Users\\CLIENTE\\Desktop\\ResultS\\Pesquisas.txt");
         byte[] save = stringBuilder.toString().getBytes();
 
         try {
@@ -176,6 +189,39 @@ public class SQL {
             }catch (SQLException sqlException){
                 sqlException.printStackTrace();
             }
+    }
+
+    public static void setConfig(int dias){
+        PreparedStatement preparedStatement, apagar;
+        try{
+
+            preparedStatement = conexao.prepareStatement(String.format("INSERT INTO config values('%d',0)",dias));
+            apagar = conexao.prepareStatement("DELETE FROM config WHERE tipo=0;");
+            apagar.executeUpdate();
+            preparedStatement.executeUpdate();
+
+        }catch (Exception ignored){
+
+        }
+    }
+
+    public static String getConfig(){
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        String dias = null;
+        try{
+
+            preparedStatement = conexao.prepareStatement("SELECT * FROM config");
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                dias = String.valueOf(resultSet.getInt("dias"));
+            }
+
+        }catch (Exception ignored){
+            System.out.println("a");
+        }
+        return dias;
     }
 
     public static void main(String[] args) throws SQLException {

@@ -36,16 +36,14 @@ public class TelaSQL {
     private static void initSQL() {
         try {
             sql = new SQL();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Necessário Iniciar programa XAMPP");
-            System.exit(0);
+        } catch (SQLException ignored) {
         }
     }
 
     private static void configurarTela(){
         frameSQL = new JFrame();
         frameSQL.setVisible(false);
-        frameSQL.setPreferredSize(new Dimension(610,320));
+        frameSQL.setPreferredSize(new Dimension(610,340));
         frameSQL.setResizable(false);
         frameSQL.setTitle("SQL");
         frameSQL.add(contentPanelSQL);
@@ -57,10 +55,9 @@ public class TelaSQL {
         textFieldConter.setBounds(170,108,397,30);
         botaoFiltrar.setBounds(450,250,115,32);
         botaoSalvar.setBounds(310,250,115,32);
-        labelNumero.setBounds(70,240,100,50);
+        labelNumero.setBounds(20,240,120,50);
         planoFundo.setBounds(0,0,600,300);
 
-        botaoSalvar.setEnabled(false);
     }
 
     private static void addToPanel(){
@@ -91,6 +88,8 @@ public class TelaSQL {
                     sql.filter(textFieldConter.getText(), textFieldNaoConter.getText(), true);
                     setAllEnable();
                 } catch (SQLException ignore) { }
+            }else{
+                JOptionPane.showMessageDialog(null, "Erro: Sem filtro definido");
             }
         });
 

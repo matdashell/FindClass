@@ -18,7 +18,7 @@ import static java.lang.Thread.sleep;
 @SuppressWarnings("ALL")
 public class Find {
 
-    WebDriver driver = null;
+    public WebDriver driver = null;
     Robot r = null;
     int meuNumero;
     int numeroThread;
@@ -34,7 +34,8 @@ public class Find {
 
     //configuração para iniciar o driver
     public void init(boolean headless) throws AWTException {
-        System.setProperty("webdriver.chrome.driver", "E:\\BotProgram\\Program\\Resources\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\RecursosPng\\chromedriver.exe");
+//        System.setProperty("webdriver.chrome.driver", "C:\\Users\\CLIENTE\\Desktop\\recursosBotProgram\\recursos\\programas\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         if(!headless) { options.addArguments("--headless"); }
         driver = new ChromeDriver(options);
