@@ -74,7 +74,4 @@ public class TelaInfoThread {
         panelScroll.setBounds(22,240,980,240);
     }
 
-    public static void main(String[] args) {
-        new TelaInfoThread();
-    }
 }

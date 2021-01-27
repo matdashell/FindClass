@@ -1,5 +1,6 @@
 package fbSelenium.code;
 
+import fbSelenium.frame.TelaComentarios;
 import fbSelenium.frame.TelaSQL;
 
 import java.nio.file.Files;
@@ -118,13 +119,13 @@ public class SQL {
 
             //gravar os dados em arquivo txt
             while (rsFilter.next()) {
-                stringBuilder.append(String.format("  User: %s \n\n ➤Comentou: %s \nHá %s dia(s) \n\n Url: %s",
+                stringBuilder.append(String.format(" ➤User: %s \n\n ➤Comentou: %s \n ➤ %s dia(s) \n\n ➤Url: %s",
                         rsFilter.getString("nome"),
                         rsFilter.getString("comentario"),
-                        getConfig(),
+                        rsFilter.getString("dias"),
                         rsFilter.getString("url")
                         )
-                ).append("\n-----------------------------------------------------------------\n");
+                ).append("\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
         }
         catch (Exception ignored){
@@ -144,12 +145,7 @@ public class SQL {
 
     //consulta dados filtrados em pessoasnofilter e grava em um arquivo RTF
     private static void gravarTXT(StringBuilder stringBuilder){
-        Path path = Paths.get("C:\\Users\\CLIENTE\\Desktop\\ResultS\\Pesquisas.txt");
-        byte[] save = stringBuilder.toString().getBytes();
-
-        try {
-            Files.write(path,save);
-        }catch (Exception ignored){ }
+        TelaComentarios.jtextPane.setText(stringBuilder.toString());
     }
 
     //carregar emails e senhas do banco de dados
@@ -219,12 +215,8 @@ public class SQL {
             }
 
         }catch (Exception ignored){
-            System.out.println("a");
         }
         return dias;
     }
 
-    public static void main(String[] args) throws SQLException {
-        new SQL();
-    }
 }

@@ -18,6 +18,7 @@ public class TelaInicial {
 
      static TelaSQL telaSQL;
      static TelaInfoThread telaInfoThread;
+     static TelaComentarios telaComentarios;
      static TelaConfig telaConfig;
      static TelaInfo telaInfo;
      static JFrame frameTelaInicial = new JFrame();
@@ -83,6 +84,7 @@ public class TelaInicial {
         telaSQL = new TelaSQL();
         telaConfig = new TelaConfig();
         telaInfo = new TelaInfo();
+        telaComentarios = new TelaComentarios();
 
      }
 
@@ -172,25 +174,31 @@ public class TelaInicial {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                if (!pesquisas.getText().trim().equals("")) {
+                if(!iniciar) {
 
-                    int resposta = JOptionPane.showConfirmDialog(null, "Deseja Iniciar o programa? Certifique-se de ter configurado antes!");
+                    if (!pesquisas.getText().trim().equals("")) {
 
-                    if(resposta == 0) {
+                        int resposta = JOptionPane.showConfirmDialog(null, "Deseja Iniciar o programa? Certifique-se de ter configurado antes!");
 
-                        if (pesquisas.getText().split(",").length <= sql.getEmailslESenhas().size()) {
+                        if (resposta == 0) {
 
-                            botaoIniciarTrue.setVisible(false);
-                            telaSQL.getFrame().setVisible(false);
-                            telaConfig.getFrame().setVisible(false);
-                            iniciar = true;
+                            if (pesquisas.getText().split(",").length <= sql.getEmailslESenhas().size()) {
 
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Erro: Número de emails cadastrados é inferior ao número de pesquisas");
+                                botaoIniciarTrue.setVisible(false);
+                                telaSQL.getFrame().setVisible(false);
+                                telaConfig.getFrame().setVisible(false);
+                                iniciar = true;
+
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Erro: Número de emails cadastrados é inferior ao número de pesquisas");
+                            }
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Erro: Necessário definir pesquisa.");
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Erro: Necessário definir pesquisa.");
+
+                }else{
+                    JOptionPane.showMessageDialog(null, "Erro: Programa já iniciado!");
                 }
 
             }
@@ -332,7 +340,4 @@ public class TelaInicial {
         });
     }
 
-    public static void main(String[] args) {
-        new TelaInicial();
-    }
 }

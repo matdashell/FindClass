@@ -1,5 +1,6 @@
 package fbSelenium.code;
 
+import FindClass.Bots;
 import FindClass.Find;
 import fbSelenium.frame.TelaInfoThread;
 import org.openqa.selenium.Keys;
@@ -81,18 +82,24 @@ public class FacebookClass {
         find.more(FacebookClass.email_senha_m).get(1).sendKeys(senha);
         find.more(FacebookClass.email_senha_m).get(1).sendKeys(Keys.ENTER);
         find.waitWhileDisable(pesquisa_o);
-        find.time(10000);
-        if(find.driver.getCurrentUrl().equals("https://www.facebook.com")) {
-            editarLogCaixaGrafica("Logado!");
-        }else{
-            editarLogCaixaGrafica("Erro com informações de login!");
-        }
+        find.time((long) (Bots.numeroDeThreads * 8000L));
+
     }
 
     /*
     Método com função de efetuar a pesquisa no facebook de acordo com o termo estabelecido
      */
     private void pesquisar(String pesquisa){
+        if(find.visible(pesquisa_o)){
+            editarLogCaixaGrafica("Logado com sucesso!");
+            find.time(5000);
+        }else{
+            editarLogCaixaGrafica("Erro ao efetuar login!");
+            while (true) {
+
+            }
+        }
+
         find.one(FacebookClass.pesquisa_o).sendKeys("#"+pesquisa);
         find.one(FacebookClass.pesquisa_o).sendKeys(Keys.ENTER);
         editarLogCaixaGrafica("Aguardando pesquisa...");

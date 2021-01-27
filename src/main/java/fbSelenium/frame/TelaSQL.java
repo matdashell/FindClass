@@ -14,7 +14,7 @@ public class TelaSQL {
 
     public static final JLabel labelNumero = new JLabel("0");
     private static final JLabel planoFundo = new JLabel(new ImageIcon("C:\\RecursosPng\\SQL.png"));
-    private static final JButton botaoSalvar = new JButton("Salvar");
+    private static final JButton botaoSalvar = new JButton("Exibir");
     private static final JButton botaoFiltrar = new JButton("Filtrar");
     private static final JTextField textFieldConter = new JTextField();
     private static final JTextField textFieldNaoConter = new JTextField();
@@ -86,6 +86,8 @@ public class TelaSQL {
                 try {
                     setAllDisable();
                     sql.filter(textFieldConter.getText(), textFieldNaoConter.getText(), true);
+                    TelaComentarios.getFrame().setLocationRelativeTo(null);
+                    TelaComentarios.getFrame().setVisible(true);
                     setAllEnable();
                 } catch (SQLException ignore) { }
             }else{
@@ -111,10 +113,6 @@ public class TelaSQL {
     private static void setAllEnable(){
         botaoSalvar.setEnabled(true);
         botaoFiltrar.setEnabled(true);
-    }
-
-    public static void main(String[] args) {
-        new TelaSQL();
     }
 
 }

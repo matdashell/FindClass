@@ -143,7 +143,4 @@ public class TelaConfig {
         });
     }
 
-    public static void main(String[] args) {
-        new TelaConfig();
-    }
 }

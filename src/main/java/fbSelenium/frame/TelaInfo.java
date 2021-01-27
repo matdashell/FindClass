@@ -39,8 +39,4 @@ public class TelaInfo {
         frame.validate();
         frame.repaint();
     }
-
-    public static void main(String[] args) {
-        new TelaInfo();
-    }
 }
