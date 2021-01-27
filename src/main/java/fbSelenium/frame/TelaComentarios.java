@@ -16,7 +16,7 @@ public class TelaComentarios {
         frame = new JFrame();
         frame.setResizable(false);
         frame.setPreferredSize(new Dimension(1280,720));
-        frame.setVisible(true);
+        frame.setVisible(false);
 
         JScrollPane scrollPane = new JScrollPane(jtextPane);
 
@@ -28,9 +28,5 @@ public class TelaComentarios {
 
     static JFrame getFrame(){
         return frame;
-    }
-
-    public static void main(String[] args) {
-        new TelaComentarios();
     }
 }

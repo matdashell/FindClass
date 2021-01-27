@@ -16,9 +16,11 @@ public class TelaSQL {
     private static final JLabel planoFundo = new JLabel(new ImageIcon("C:\\RecursosPng\\SQL.png"));
     private static final JButton botaoSalvar = new JButton("Exibir");
     private static final JButton botaoFiltrar = new JButton("Filtrar");
+    private static final JButton botaoAvancado = new JButton("Avançado");
     private static final JTextField textFieldConter = new JTextField();
     private static final JTextField textFieldNaoConter = new JTextField();
     private static final JPanel contentPanelSQL = new JPanel(null);
+    private static final JPanel avancado = new JPanel(null);
 
     TelaSQL() {
         initSQL();
@@ -57,6 +59,7 @@ public class TelaSQL {
         botaoSalvar.setBounds(310,250,115,32);
         labelNumero.setBounds(20,240,120,50);
         planoFundo.setBounds(0,0,600,300);
+        botaoAvancado.setBounds(170,250,115,32);
 
     }
 
@@ -66,6 +69,7 @@ public class TelaSQL {
         contentPanelSQL.add(botaoFiltrar);
         contentPanelSQL.add(botaoSalvar);
         contentPanelSQL.add(labelNumero);
+        contentPanelSQL.add(botaoAvancado);
         contentPanelSQL.add(planoFundo);
     }
 
@@ -103,6 +107,10 @@ public class TelaSQL {
                     setAllEnable();
                 } catch (SQLException ignore) { }
             }
+        });
+
+        botaoAvancado.addActionListener(actin -> {
+
         });
     }
 

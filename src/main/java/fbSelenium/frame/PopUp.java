@@ -9,32 +9,30 @@ public class PopUp {
 
     private static JFrame frame = null;
 
-    public static JFrame getPopUpLabel(JLabel jLabel){
+    public static void getPopUpPanel(JPanel jPanel){
 
-        jLabel.setPreferredSize(new Dimension(jLabel.getWidth()+25, jLabel.getHeight()+10));
+        System.out.println(jPanel.getHeight());
 
         frame = new JFrame();
 
-        if(jLabel.getHeight() < 600) {
-            frame.setPreferredSize(jLabel.getPreferredSize());
-            frame.add(jLabel);
+        if(jPanel.getHeight() < 600) {
+            frame.setPreferredSize(jPanel.getPreferredSize());
+            frame.add(jPanel);
         }else {
-            addScrool(jLabel);
+            addScrool(jPanel);
         }
 
         frame.setVisible(true);
         frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.pack();
         frame.repaint();
         frame.validate();
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-
-        return frame;
     }
 
-    private static void addScrool(JLabel jLabel){
-        JScrollPane scrollPane = new JScrollPane(jLabel);
-        scrollPane.setPreferredSize(new Dimension(jLabel.getWidth()+25, 600));
+    private static void addScrool(JPanel jPanel){
+        JScrollPane scrollPane = new JScrollPane(jPanel);
+        scrollPane.setPreferredSize(new Dimension(jPanel.getWidth()+25, 600));
         scrollPane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
 

@@ -100,7 +100,7 @@ public class TelaConfig {
             String[] email = emails.getText().split(",");
             String[] senha = senhas.getText().split(",");
 
-            if(email.length == senha.length){
+            if(email.length == senha.length && (email[0].length() != 0 && senha[0].length() != 0)){
 
                 for(int i = 0; i < email.length; i++){
                     if(!email[i].trim().equals("") && !email[i].trim().equals("")) {
@@ -110,22 +110,22 @@ public class TelaConfig {
 
                 sql.setEmailsESenhas(emailESenha);
 
-            }else{
-                JOptionPane.showMessageDialog(null, "Erro: Quantidade de emails e senhas diferentes");
-            }
 
-            try{
-                if(!diasMin.getText().trim().equals("")) {
-                    int dias = Integer.parseInt(diasMin.getText());
-                    sql.setConfig(dias);
+                try{
+                    if(!diasMin.getText().trim().equals("")) {
+                        int dias = Integer.parseInt(diasMin.getText());
+                        sql.setConfig(dias);
 
-                    JOptionPane.showMessageDialog(null,"Dados salvos.");
+                        JOptionPane.showMessageDialog(null,"Dados salvos.");
 
-                }else {
+                    }else {
+                        JOptionPane.showMessageDialog(null,"Erro: Campo de dias mínimos incorreto");
+                    }
+                }catch (Exception e) {
                     JOptionPane.showMessageDialog(null,"Erro: Campo de dias mínimos incorreto");
                 }
-            }catch (Exception e) {
-                JOptionPane.showMessageDialog(null,"Erro: Campo de dias mínimos incorreto");
+            }else{
+                JOptionPane.showMessageDialog(null, "Erro: Quantidade de emails e senhas diferentes ou campos vazios");
             }
         });
 

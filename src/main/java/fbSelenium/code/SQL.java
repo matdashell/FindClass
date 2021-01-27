@@ -16,7 +16,9 @@ public class SQL {
     //iniciar sql
     public SQL() throws SQLException {
         String url = "jdbc:mysql://localhost/infofind";
-        conexao = DriverManager.getConnection(url,"root", "1oGDm2ZttIHPucnu");
+        conexao = DriverManager.getConnection(url,"root", "");
+
+        testarBanco();
     }
 
     //gravar todos os resultados obtidos dentro da tabela pessoasnofilter
@@ -107,9 +109,8 @@ public class SQL {
 
     public static void salvar(StringBuilder statement){
 
-        StringBuilder stringBuilder = new StringBuilder();
         PreparedStatement filter;
-        ResultSet rsFilter;
+        ResultSet rsFilter = null;
 
         try {
 
@@ -117,7 +118,17 @@ public class SQL {
             filter = conexao.prepareStatement("SELECT * FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
             rsFilter = filter.executeQuery();
 
-            //gravar os dados em arquivo txt
+        }
+        catch (Exception ignored){
+
+        }
+
+        gravarTXT(salvarEmStringB(rsFilter));
+    }
+
+    private static StringBuilder salvarEmStringB(ResultSet rsFilter){
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
             while (rsFilter.next()) {
                 stringBuilder.append(String.format(" ➤User: %s \n\n ➤Comentou: %s \n ➤ %s dia(s) \n\n ➤Url: %s",
                         rsFilter.getString("nome"),
@@ -127,12 +138,10 @@ public class SQL {
                         )
                 ).append("\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
-        }
-        catch (Exception ignored){
+        }catch (Exception ignored) {
 
         }
-
-        gravarTXT(stringBuilder);
+        return stringBuilder;
     }
 
     //exclui dados da tabela pessoasnofilter
@@ -217,6 +226,61 @@ public class SQL {
         }catch (Exception ignored){
         }
         return dias;
+    }
+
+    private static void testarBanco(){
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELEC * FROM pessoasnofilter");
+            preparedStatement.executeQuery();
+        }catch (Exception e) {
+            try {
+                PreparedStatement preparedStatement = conexao.prepareStatement("CREATE TABLE pessoasnofilter(nome varchar(50),comentario varchar(500),url varchar(100),tipo int,dias int);");
+                preparedStatement.executeUpdate();
+            }catch (Exception ignored) { }
+        }
+
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM config");
+            preparedStatement.executeQuery();
+        }catch (Exception e) {
+            try {
+                PreparedStatement preparedStatement = conexao.prepareStatement("CREATE TABLE config(dias int,tipo int);");
+                preparedStatement.executeUpdate();
+            }catch (Exception ignored) { }
+        }
+
+        try {
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM emails");
+            preparedStatement.executeQuery();
+        }catch (Exception e) {
+            try {
+                PreparedStatement preparedStatement = conexao.prepareStatement("CREATE TABLE emails(email varchar(50),senha varchar(50),tipo int);");
+                preparedStatement.executeUpdate();
+            }catch (Exception ignored) { }
+        }
+    }
+
+    public void executeUpdate(String cmd){
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = conexao.prepareStatement(cmd);
+            preparedStatement.executeUpdate();
+        }catch (Exception ignored) {
+
+        }
+    }
+
+    public void executeQuery(String cmd){
+        PreparedStatement preparedStatement;
+        ResultSet rs;
+        try {
+            preparedStatement = conexao.prepareStatement(cmd);
+            rs = preparedStatement.executeQuery();
+
+            gravarTXT(salvarEmStringB(rs));
+        }catch (Exception ignored) {
+
+        }
     }
 
 }
