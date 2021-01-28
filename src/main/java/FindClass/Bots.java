@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class Bots {
 
     public static Function<Find, Exception> algoritimoExecutavel = null;
-    public static boolean paginaVisivel = false;
+    public static boolean paginaVisivel = true;
     public static int numeroDeExecucoes;
     public static int numeroDeThreads;
     public static int tempoDeEsperaDriver;

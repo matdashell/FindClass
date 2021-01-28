@@ -16,9 +16,9 @@ public class TelaSQL {
     private static final JLabel planoFundo = new JLabel(new ImageIcon("C:\\RecursosPng\\SQL.png"));
     private static final JButton botaoSalvar = new JButton("Exibir");
     private static final JButton botaoFiltrar = new JButton("Filtrar");
-    private static final JButton botaoAvancado = new JButton("Avançado");
     private static final JTextField textFieldConter = new JTextField();
     private static final JTextField textFieldNaoConter = new JTextField();
+    private static final JTextField textFieldNeutro = new JTextField();
     private static final JPanel contentPanelSQL = new JPanel(null);
     private static final JPanel avancado = new JPanel(null);
 
@@ -55,21 +55,21 @@ public class TelaSQL {
 
         textFieldNaoConter.setBounds(170,30,397,30);
         textFieldConter.setBounds(170,108,397,30);
+        textFieldNeutro.setBounds(170,180,397,30);
         botaoFiltrar.setBounds(450,250,115,32);
         botaoSalvar.setBounds(310,250,115,32);
         labelNumero.setBounds(20,240,120,50);
         planoFundo.setBounds(0,0,600,300);
-        botaoAvancado.setBounds(170,250,115,32);
 
     }
 
     private static void addToPanel(){
         contentPanelSQL.add(textFieldNaoConter);
         contentPanelSQL.add(textFieldConter);
+        contentPanelSQL.add(textFieldNeutro);
         contentPanelSQL.add(botaoFiltrar);
         contentPanelSQL.add(botaoSalvar);
         contentPanelSQL.add(labelNumero);
-        contentPanelSQL.add(botaoAvancado);
         contentPanelSQL.add(planoFundo);
     }
 
@@ -86,12 +86,10 @@ public class TelaSQL {
     private static void actionComponentes(){
 
         botaoSalvar.addActionListener(actin -> {
-            if(!textFieldConter.getText().equals("") || !textFieldNaoConter.getText().equals("")) {
+            if(!textFieldNeutro.getText().equals("") || !textFieldConter.getText().equals("") || !textFieldNaoConter.getText().equals("")) {
                 try {
                     setAllDisable();
-                    sql.filter(textFieldConter.getText(), textFieldNaoConter.getText(), true);
-                    TelaComentarios.getFrame().setLocationRelativeTo(null);
-                    TelaComentarios.getFrame().setVisible(true);
+                    sql.filter(textFieldNeutro.getText(), textFieldConter.getText(), textFieldNaoConter.getText(), true);
                     setAllEnable();
                 } catch (SQLException ignore) { }
             }else{
@@ -100,17 +98,13 @@ public class TelaSQL {
         });
 
         botaoFiltrar.addActionListener(actin -> {
-            if(!textFieldConter.getText().equals("") || !textFieldNaoConter.getText().equals("")) {
+            if(!textFieldNeutro.getText().equals("") || !textFieldConter.getText().equals("") || !textFieldNaoConter.getText().equals("")) {
                 try {
                     setAllDisable();
-                    sql.filter(textFieldConter.getText(), textFieldNaoConter.getText(), false);
+                    sql.filter(textFieldNeutro.getText(), textFieldConter.getText(), textFieldNaoConter.getText(), false);
                     setAllEnable();
                 } catch (SQLException ignore) { }
             }
-        });
-
-        botaoAvancado.addActionListener(actin -> {
-
         });
     }
 

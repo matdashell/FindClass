@@ -33,10 +33,27 @@ public class SQL {
     }
 
     //método filter usado para o user poder filtrar os dados
-    public static void filter(String cmdFalse, String cmdTrue, boolean salvar) throws SQLException {
+    public static void filter(String cmdNeutro, String cmdFalse, String cmdTrue, boolean salvar) throws SQLException {
 
         StringBuilder statement = new StringBuilder();
         boolean aux = false;
+
+        if(cmdNeutro != null && !cmdNeutro.trim().equals("")){
+
+            String[] temp = cmdNeutro.split(",");
+
+            for(int i = 0; i < temp.length; i++){
+
+                statement.append("comentario LIKE '%").append(temp[i].trim()).append("%'");
+                if(i != temp.length-1){
+                    statement.append(" OR ");
+                }
+            }
+
+            if(!cmdFalse.trim().equals("") || !cmdTrue.trim().equals("")){
+                statement.append(" AND ");
+            }
+        }
 
         if(cmdFalse != null && !cmdFalse.trim().equals("")){
 
@@ -63,12 +80,11 @@ public class SQL {
                 statement.append("comentario LIKE '%").append(temp[i].trim()).append("%'");
                 if(i != temp.length-1){
                     statement.append(" AND ");
-                }else{
-                    statement.append(" AND dias<=").append(getConfig()).append(" AND url NOT LIKE '%https://www.facebook.com/profile.php?id=1%'");
-
                 }
             }
         }
+
+        statement.append(" AND dias<=").append(getConfig()).append(" AND url NOT LIKE '%https://www.facebook.com/profile.php?id=1%'");
 
         PreparedStatement filter;
         ResultSet rsFilter;
@@ -128,9 +144,8 @@ public class SQL {
 
     private static void salvarEmStringB(ResultSet rsFilter){
 
-        TelaComentarios telaComentarios = null;
-        telaComentarios.gerarComentarios(rsFilter);
-        telaComentarios.removeComponents();
+        TelaComentarios telaComentarios = new TelaComentarios();
+        telaComentarios.configComentarios(rsFilter);
 
     }
 

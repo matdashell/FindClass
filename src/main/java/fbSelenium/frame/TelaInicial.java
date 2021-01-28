@@ -18,7 +18,6 @@ public class TelaInicial {
 
      static TelaSQL telaSQL;
      static TelaInfoThread telaInfoThread;
-     static TelaComentarios telaComentarios;
      static TelaConfig telaConfig;
      static TelaInfo telaInfo;
      static JFrame frameTelaInicial = new JFrame();
@@ -84,7 +83,6 @@ public class TelaInicial {
         telaSQL = new TelaSQL();
         telaConfig = new TelaConfig();
         telaInfo = new TelaInfo();
-        telaComentarios = new TelaComentarios();
 
      }
 

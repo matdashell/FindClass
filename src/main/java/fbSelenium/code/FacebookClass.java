@@ -78,6 +78,7 @@ public class FacebookClass {
     private void logar(String email, String senha){
         editarLogCaixaGrafica("Logando...");
         find.page("https://www.facebook.com");
+        find.time(2000);
         find.more(FacebookClass.email_senha_m).get(0).sendKeys(email);
         find.more(FacebookClass.email_senha_m).get(1).sendKeys(senha);
         find.more(FacebookClass.email_senha_m).get(1).sendKeys(Keys.ENTER);
@@ -217,7 +218,7 @@ public class FacebookClass {
             List<WebElement> spanOutPost = new ArrayList<>(find.more(post, spanPost_inPost_m));
 
             for (WebElement span : spanOutPost) {
-                if (span.getText().endsWith("comentários") || span.getText().endsWith("comentário")) {
+                if (span.getText().endsWith("anterior") || span.getText().endsWith("anteriores") || span.getText().endsWith("comentários") || span.getText().endsWith("comentário")) {
                     numeroComentarioDoPost = span.getText().split(" ")[0];
 
                     try {
