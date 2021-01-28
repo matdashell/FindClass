@@ -16,7 +16,7 @@ public class SQL {
     //iniciar sql
     public SQL() throws SQLException {
         String url = "jdbc:mysql://localhost/infofind";
-        conexao = DriverManager.getConnection(url,"root", "");
+        conexao = DriverManager.getConnection(url,"root", "abc");
 
         testarBanco();
     }
@@ -64,7 +64,7 @@ public class SQL {
                 if(i != temp.length-1){
                     statement.append(" AND ");
                 }else{
-                    statement.append(" AND dias<=").append(getConfig());
+                    statement.append(" AND dias<=").append(getConfig()).append(" AND url NOT LIKE '%https://www.facebook.com/profile.php?id=1%'");
 
                 }
             }
@@ -76,10 +76,10 @@ public class SQL {
         if(!salvar) {
             try {
 
-                System.out.println("SELECT COUNT(comentario) FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
+                System.out.println("SELECT DISTINCT COUNT(comentario) FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
 
                 //Obter numero obtido pelo filtro
-                filter = conexao.prepareStatement("SELECT COUNT(comentario) FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
+                filter = conexao.prepareStatement("SELECT DISTINCT COUNT(comentario) FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
                 rsFilter = filter.executeQuery();
 
                 int tamanhoPesquisa = 0;
@@ -89,7 +89,7 @@ public class SQL {
                     tamanhoPesquisa = rsFilter.getInt(1);
                 }
 
-                filter = conexao.prepareStatement("SELECT COUNT(comentario) FROM pessoasnofilter");
+                filter = conexao.prepareStatement("SELECT DISTINCT COUNT(comentario) FROM pessoasnofilter");
                 rsFilter = filter.executeQuery();
 
                 while(rsFilter.next()){
@@ -115,7 +115,7 @@ public class SQL {
         try {
 
             //Obter pessoas que passaram pelo filtro
-            filter = conexao.prepareStatement("SELECT * FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
+            filter = conexao.prepareStatement("SELECT DISTINCT * FROM pessoasnofilter WHERE " + statement.toString().trim() + ";");
             rsFilter = filter.executeQuery();
 
         }
@@ -123,25 +123,15 @@ public class SQL {
 
         }
 
-        gravarTXT(salvarEmStringB(rsFilter));
+        salvarEmStringB(rsFilter);
     }
 
-    private static StringBuilder salvarEmStringB(ResultSet rsFilter){
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            while (rsFilter.next()) {
-                stringBuilder.append(String.format(" ➤User: %s \n\n ➤Comentou: %s \n ➤ %s dia(s) \n\n ➤Url: %s",
-                        rsFilter.getString("nome"),
-                        rsFilter.getString("comentario"),
-                        rsFilter.getString("dias"),
-                        rsFilter.getString("url")
-                        )
-                ).append("\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-            }
-        }catch (Exception ignored) {
+    private static void salvarEmStringB(ResultSet rsFilter){
 
-        }
-        return stringBuilder;
+        TelaComentarios telaComentarios = null;
+        telaComentarios.gerarComentarios(rsFilter);
+        telaComentarios.removeComponents();
+
     }
 
     //exclui dados da tabela pessoasnofilter
@@ -150,11 +140,6 @@ public class SQL {
             PreparedStatement excluir = conexao.prepareStatement("DELETE FROM pessoasnofilter WHERE tipo=0;");
             excluir.executeUpdate();
         }catch (Exception ignored) { }
-    }
-
-    //consulta dados filtrados em pessoasnofilter e grava em um arquivo RTF
-    private static void gravarTXT(StringBuilder stringBuilder){
-        TelaComentarios.jtextPane.setText(stringBuilder.toString());
     }
 
     //carregar emails e senhas do banco de dados
@@ -230,7 +215,7 @@ public class SQL {
 
     private static void testarBanco(){
         try {
-            PreparedStatement preparedStatement = conexao.prepareStatement("SELEC * FROM pessoasnofilter");
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT * FROM pessoasnofilter");
             preparedStatement.executeQuery();
         }catch (Exception e) {
             try {
@@ -277,7 +262,6 @@ public class SQL {
             preparedStatement = conexao.prepareStatement(cmd);
             rs = preparedStatement.executeQuery();
 
-            gravarTXT(salvarEmStringB(rs));
         }catch (Exception ignored) {
 
         }
