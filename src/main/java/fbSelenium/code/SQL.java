@@ -16,7 +16,8 @@ public class SQL {
     //iniciar sql
     public SQL() throws SQLException {
         String url = "jdbc:mysql://localhost/infofind";
-        conexao = DriverManager.getConnection(url,"root", "abc");
+//        conexao = DriverManager.getConnection(url,"root", "abc");
+        conexao = DriverManager.getConnection(url,"root", "TeWVEIoyDS9HrTWD");
 
         testarBanco();
     }
@@ -38,30 +39,51 @@ public class SQL {
         StringBuilder statement = new StringBuilder();
         boolean aux = false;
 
-        if(cmdNeutro != null && !cmdNeutro.trim().equals("")){
-
-            String[] temp = cmdNeutro.split(",");
-
-            for(int i = 0; i < temp.length; i++){
-
-                statement.append("comentario LIKE '%").append(temp[i].trim()).append("%'");
-                if(i != temp.length-1){
-                    statement.append(" OR ");
-                }
-            }
-
-            if(!cmdFalse.trim().equals("") || !cmdTrue.trim().equals("")){
-                statement.append(" AND ");
-            }
-        }
-
         if(cmdFalse != null && !cmdFalse.trim().equals("")){
 
             String[] temp = cmdFalse.split(",");
 
             for(int i = 0; i < temp.length; i++){
 
-                statement.append("comentario NOT LIKE '%").append(temp[i].trim()).append("%'");
+                if(temp[i].contains("[") && temp[i].contains("]")){
+
+                    String inicio = null, fim = null;
+
+                    try {
+                        inicio = temp[i].split("\\[")[0];
+                    }catch (Exception ignore) { }
+
+                    try {
+                        fim = temp[i].split("]")[1];
+                    }catch (Exception ignore) { }
+
+                    String[] cmdOR = temp[i].split("\\[")[1].split("]")[0].split(";");
+
+                    statement.append("(");
+
+                    for(int j = 0; j < cmdOR.length; j++){
+                        statement.append("comentario NOT LIKE '%");
+                        if(inicio != null) {
+                            statement.append(inicio);
+                        }
+                        statement.append(cmdOR[j].trim());
+
+                        if(fim != null) {
+                            statement.append(fim);
+                        }
+                        statement.append("%'");
+
+                        if(j != cmdOR.length - 1){
+                            statement.append(" OR ");
+                        }else{
+                            statement.append(")");
+                        }
+                    }
+
+                }else {
+                    statement.append("comentario NOT LIKE '%").append(temp[i].trim()).append("%'");
+                }
+
                 if(i != temp.length-1){
                     statement.append(" AND ");
                 }
@@ -77,9 +99,106 @@ public class SQL {
 
             for(int i = 0; i < temp.length; i++){
 
-                statement.append("comentario LIKE '%").append(temp[i].trim()).append("%'");
+                if(temp[i].contains("[") && temp[i].contains("]")){
+
+                    String inicio = null, fim = null;
+
+                    try {
+                        inicio = temp[i].split("\\[")[0];
+                    }catch (Exception ignore) { }
+
+                    try {
+                        fim = temp[i].split("]")[1];
+                    }catch (Exception ignore) { }
+
+                    String[] cmdOR = temp[i].split("\\[")[1].split("]")[0].split(";");
+
+                    statement.append("(");
+
+                    for(int j = 0; j < cmdOR.length; j++){
+                        statement.append("comentario LIKE '%");
+                        if(inicio != null) {
+                            statement.append(inicio);
+                        }
+                        statement.append(cmdOR[j].trim());
+
+                        if(fim != null) {
+                            statement.append(fim);
+                        }
+                        statement.append("%'");
+
+                        if(j != cmdOR.length - 1){
+                            statement.append(" OR ");
+                        }else{
+                            statement.append(")");
+                        }
+                    }
+
+                }else {
+                    statement.append("comentario LIKE '%").append(temp[i].trim()).append("%'");
+                }
+
                 if(i != temp.length-1){
                     statement.append(" AND ");
+                }
+            }
+        }
+
+        if(cmdNeutro != null && !cmdNeutro.trim().equals("")){
+
+            if(!cmdFalse.trim().equals("") || !cmdTrue.trim().equals("")){
+                statement.append(" AND (");
+            }else{
+                statement.append("(");
+            }
+
+            String[] temp = cmdNeutro.split(",");
+
+            for(int i = 0; i < temp.length; i++){
+
+                if(temp[i].contains("[") && temp[i].contains("]")){
+
+                    String inicio = null, fim = null;
+
+                    try {
+                        inicio = temp[i].split("\\[")[0];
+                    }catch (Exception ignore) { }
+
+                    try {
+                        fim = temp[i].split("]")[1];
+                    }catch (Exception ignore) { }
+
+                    String[] cmdOR = temp[i].split("\\[")[1].split("]")[0].split(";");
+
+                    statement.append("(");
+
+                    for(int j = 0; j < cmdOR.length; j++){
+                        statement.append("comentario LIKE '%");
+                        if(inicio != null) {
+                            statement.append(inicio);
+                        }
+                        statement.append(cmdOR[j].trim());
+
+                        if(fim != null) {
+                            statement.append(fim);
+                        }
+                        statement.append("%'");
+
+                        if(j != cmdOR.length - 1){
+                            statement.append(" OR ");
+                        }else{
+                            statement.append(")");
+                        }
+                    }
+
+                }else {
+                    statement.append("comentario LIKE '%").append(temp[i].trim()).append("%'");
+                }
+
+                if(i != temp.length-1){
+                    statement.append(" OR ");
+                }else{
+                    statement.append(")");
                 }
             }
         }
@@ -280,6 +399,20 @@ public class SQL {
         }catch (Exception ignored) {
 
         }
+    }
+
+    public static int getCount(String table){
+        int retorno = 0;
+        try{
+            PreparedStatement preparedStatement = conexao.prepareStatement("SELECT DISTINCT COUNT(*) FROM "+table+";");
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                retorno = rs.getInt(1);
+            }
+        }catch (Exception ignored) { }
+
+        return retorno;
     }
 
 }

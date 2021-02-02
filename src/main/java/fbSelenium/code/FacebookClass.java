@@ -152,8 +152,10 @@ public class FacebookClass {
      */
     private void verificarSizePost(int index){
         try {
+            posts = null;
             posts = new ArrayList<>(find.more(blocosPosts_m));
-            while (index >= posts.size() - 5) {
+            System.out.println(posts.size());
+            while (index >= posts.size() - 2) {
                 editarLogCaixaGrafica("Carregando Size Posts...");
                 descer(5);
                 posts = new ArrayList<>(find.more(blocosPosts_m));
@@ -228,6 +230,7 @@ public class FacebookClass {
                         try{
                             span.click();
                         }catch (Exception f){
+                            System.out.println(f.getMessage());
                             return false;
                         }
                     }

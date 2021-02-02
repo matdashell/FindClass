@@ -1,6 +1,5 @@
 package fbSelenium.frame;
 
-import FindClass.Bots;
 import fbSelenium.code.SQL;
 
 import javax.swing.*;
@@ -8,7 +7,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 
@@ -309,6 +307,7 @@ public class TelaInicial {
         listenerSQL.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                telaSQL.labelNumero.setText(String.valueOf(sql.getCount("pessoasnofilter")));
                 telaSQL.getFrame().setVisible(true);
                 telaSQL.getFrame().setLocationRelativeTo(null);
 

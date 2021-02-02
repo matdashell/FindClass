@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class Bots {
 
     public static Function<Find, Exception> algoritimoExecutavel = null;
-    public static boolean paginaVisivel = true;
+    public static boolean paginaVisivel = false;
     public static int numeroDeExecucoes;
     public static int numeroDeThreads;
     public static int tempoDeEsperaDriver;
@@ -53,6 +53,10 @@ public class Bots {
         for (String dado : dados) {
             emails.add(dado.split(",")[0]);
             senhas.add(dado.split(",")[1]);
+        }
+
+        for(int i = 0; i < numeroDeThreads; i++){
+            TelaInfoThread.numeroThread.get(i).setText(emails.get(i));
         }
 
         System.out.println(listaPesquisa);

@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BotProgram:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BotProgram_jar</output-path>
+    <root id="archive" name="BotProgram.jar">
+      <element id="module-output" name="BotProgram" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/20.1.0/annotations-20.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/byte-buddy-1.8.15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/commons-exec-1.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/guava-25.0-jre.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/okhttp-3.11.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/okio-1.14.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../DriversJava/Selenium/client-combined-3.141.59.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../DriversJava/mysql-connector-java-8.0.22/mysql-connector-java-8.0.22.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/byte-buddy-1.8.15.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/commons-exec-1.3.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/guava-25.0-jre.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/okhttp-3.11.0.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../DriversJava/Selenium/libs/okio-1.14.0.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../DriversJava/Selenium/client-combined-3.141.59.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../DriversJava/mysql-connector-java-8.0.22/mysql-connector-java-8.0.22.jar" />
+      <element id="library" level="project" name="Maven: org.jetbrains:annotations:20.1.0" />
+    </root>
+  </artifact>
+</component>
